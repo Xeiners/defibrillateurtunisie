@@ -1,66 +1,41 @@
 export type Brand = {
   id: string
-  /** Nom de la marque : il sert aussi de texte alternatif au logo. */
+  /** Nom du client : il sert aussi de texte alternatif au logo. */
   name: string
-  /** Chemin du logo, servi depuis `public/`. */
+  /** Chemin du logo, servi depuis `public/marques/`. */
   logo: string
-  /**
-   * Dimensions d'origine du fichier. Passées en attributs à l'image, elles
-   * réservent la bonne place avant le chargement : les logos n'ont pas tous
-   * la même proportion.
-   */
-  width: number
-  height: number
 }
 
 /**
- * Marques de la bande qui défile sous le hero.
+ * Clients affichés dans la bande « Ils nous font confiance ».
  *
- * LISTE DE DÉPART, À VALIDER AVEC LE CLIENT. Afficher le logo d'un fabricant
- * laisse entendre qu'on distribue ou loue son matériel : ne garder que les
- * marques réellement proposées, et ajouter celles qui manquent — ZOLL et
- * Cardiac Science, visibles sur les photos du site, n'ont pas pu être
- * récupérées.
+ * Ce sont des RÉFÉRENCES CLIENTS, pas des marques d'appareils : afficher un
+ * logo ici affirme que l'établissement est équipé par nous. Ne garder que ceux
+ * dont l'accord est acquis.
  *
- * Provenance des fichiers :
- *   - Philips : Wikimedia Commons, « Philips logo new.svg », domaine public.
- *     Un `viewBox` a été ajouté au fichier : sans lui, un SVG affiché en
- *     image est rogné au lieu d'être réduit.
- *   - Stryker, Nihon Kohden, Mindray : logos publiés sur les sites officiels
- *     des marques. Celui de Stryker est sur fond BLANC OPAQUE — invisible sur
- *     le fond blanc de la bande, mais à remplacer si ce fond change.
- *
- * Pour ajouter ou remplacer une marque : déposer le fichier dans
- * `public/marques/` et renseigner ici le nom, le chemin et les dimensions.
- * Format à demander : SVG sur fond transparent.
+ * Les fichiers sont recadrés au plus près du logo : sans cela, leurs marges
+ * blanches les faisaient paraître de tailles différentes dans la bande. Pour en
+ * ajouter un, déposer le fichier dans `public/marques/`, le recadrer de même et
+ * l'inscrire ici.
  */
 export const brands: Brand[] = [
-  {
-    id: 'philips',
-    name: 'Philips',
-    logo: '/marques/philips.svg',
-    width: 500,
-    height: 92,
-  },
-  {
-    id: 'stryker',
-    name: 'Stryker',
-    logo: '/marques/stryker.png',
-    width: 192,
-    height: 48,
-  },
-  {
-    id: 'nihon-kohden',
-    name: 'Nihon Kohden',
-    logo: '/marques/nihon-kohden.png',
-    width: 433,
-    height: 56,
-  },
-  {
-    id: 'mindray',
-    name: 'Mindray',
-    logo: '/marques/mindray.png',
-    width: 404,
-    height: 104,
-  },
+  { id: 'carrefour', name: 'Carrefour', logo: '/marques/carrefour.png' },
+  { id: 'steg', name: 'STEG', logo: '/marques/steg1.png' },
+  { id: 'amen-bank', name: 'Amen Bank', logo: '/marques/amen_bank.png' },
+  { id: 'banque-de-tunisie', name: 'Banque de Tunisie', logo: '/marques/banque_de_tunisie.png' },
+  { id: 'uib', name: 'UIB', logo: '/marques/uib.png' },
+  { id: 'sagemcom', name: 'Sagemcom', logo: '/marques/sagemcom.png' },
+  { id: 'teleperformance', name: 'Teleperformance', logo: '/marques/teleperformance.png' },
+  { id: 'eni-sergaz', name: 'ENI Sergaz', logo: '/marques/eni_sergaz.jpg' },
+  { id: 'movenpick', name: 'Mövenpick', logo: '/marques/movenpick.png' },
+  { id: 'sheraton', name: 'Sheraton', logo: '/marques/sheraton.png' },
+  { id: 'elmouradi', name: 'El Mouradi', logo: '/marques/elmouradi.png' },
+  { id: 'laico', name: 'Laico', logo: '/marques/laico.png' },
+  { id: 'magic-hotel', name: 'Magic Hotels', logo: '/marques/magichotel.png' },
+  { id: 'royal-garden', name: 'Royal Garden', logo: '/marques/royalgarden.png' },
+  { id: 'ulysse', name: 'Ulysse', logo: '/marques/ulysse.png' },
+  { id: 'iberos', name: 'Iberos', logo: '/marques/iberos.png' },
+  { id: 'la-cigale', name: 'La Cigale', logo: '/marques/la-cigale.png' },
+  { id: 'planetfoot', name: 'Planet Foot', logo: '/marques/planetfoot.png' },
+  { id: 'republique', name: 'La République', logo: '/marques/republique.png' },
 ]

@@ -1,34 +1,44 @@
-﻿import { useEffect, useState } from 'react'
-import { List, X } from '@phosphor-icons/react'
-import { isLiveHref, primaryNav } from '@/data/navigation'
-import { actions } from '@/data/site'
+import { useEffect, useRef, useState } from 'react'
+import { List, Phone, X } from '@phosphor-icons/react'
+import { primaryNav } from '@/data/navigation'
+import { actions, contact } from '@/data/site'
 import { Logo } from '@/components/ui/Logo'
 import { Button } from '@/components/ui/Button'
-import { CartButton } from '@/components/cart/CartButton'
+import { gsap } from '@/animations/gsap'
+import { cn } from '@/lib/cn'
 
 const MENU_ID = 'menu-principal'
 
 /**
- * Barre de navigation, posée sur le hero clair.
+ * Barre de navigation collante, 64px.
  *
- * Plus de pilule de verre : un simple alignement, un filet de séparation, et
- * un soulignement qui se déploie au survol. Le geste est piloté par `scaleX`
- * et non par une largeur, donc il reste sur la couche de composition.
- *
- * En mobile, le menu occupe tout l'écran : à cette taille, un panneau replié
- * sous la barre est toujours à l'étroit. Il est clair lui aussi, et non en
- * encre : il se déploie DEPUIS cette barre, un basculement de valeur au
- * passage le ferait lire comme un autre écran plutôt que comme son extension.
- *
- * Ce composant n'est monté que dans le hero et suppose un fond clair.
+ * Un filet rouge court sous elle et suit la progression de lecture. L'ombre
+ * n'apparaît qu'une fois la page défilée. En mobile, le menu se déplie sous la
+ * barre — quatre liens n'en demandent pas plus.
  */
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const progressRef = useRef<HTMLSpanElement>(null)
 
-  // Même règle qu'au pied de page : on ne propose que ce qui existe. Deux
-  // entrées de `primaryNav` (« Maintenance », « Formation ») n'ont à ce jour
-  // aucune section qui les porte et ne sont donc pas rendues.
-  const navItems = primaryNav.filter((item) => isLiveHref(item.href))
+  useEffect(() => {
+    const tween = gsap.to(progressRef.current, {
+      scaleX: 1,
+      ease: 'none',
+      scrollTrigger: { start: 0, end: 'max', scrub: 0.3 },
+    })
+    return () => {
+      tween.scrollTrigger?.kill()
+      tween.kill()
+    }
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (!isMenuOpen) return
@@ -36,124 +46,99 @@ export function Navbar() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsMenuOpen(false)
     }
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', onKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      document.removeEventListener('keydown', onKeyDown)
-    }
+    return () => document.removeEventListener('keydown', onKeyDown)
   }, [isMenuOpen])
 
+  const closeMenu = () => setIsMenuOpen(false)
+
   return (
-    <>
-      <header
-        data-hero="nav"
-        className="absolute inset-x-0 top-0 z-40 will-change-transform"
-      >
-      <div className="mx-auto flex h-20 max-w-[1560px] items-center justify-between gap-6 px-5 sm:px-8">
-        <Logo tone="light" />
+    <header
+      className={cn(
+        'sticky top-0 z-50 border-b border-navy-100 bg-white transition-shadow duration-300',
+        isScrolled && 'shadow-[0_8px_24px_-18px_rgb(7_18_36/0.35)]',
+      )}
+    >
+      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6">
+        <Logo />
 
         <nav aria-label="Navigation principale" className="hidden lg:block">
-          <ul className="flex list-none items-center gap-9">
-            {navItems.map((item) => (
+          <ul className="flex list-none items-center gap-1">
+            {primaryNav.map((item) => (
               <li key={item.id}>
                 <a
                   href={item.href}
-                  className="group relative block py-2 text-[14px] text-[var(--text-secondary)] transition-colors duration-300 hover:text-[var(--text-primary)]"
+                  className="rounded-md px-3.5 py-2 text-[14px] font-medium text-navy-600 transition-colors duration-200 hover:bg-navy-50 hover:text-navy-950"
                 >
                   {item.label}
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-[var(--text-primary)] transition-transform duration-400 ease-[var(--ease-out-expo)] group-hover:scale-x-100"
-                  />
                 </a>
               </li>
             ))}
           </ul>
         </nav>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:block">
-            <Button href={actions.quote.href} size="sm" withArrow>
-              {actions.quote.label}
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          {/* Le téléphone commercial n'apparaît que s'il est renseigné. */}
+          {contact.phone !== '' && (
+            <a
+              href={`tel:${contact.phone.replace(/\s/g, '')}`}
+              className="hidden items-center gap-2 rounded-full px-3 py-2 text-[14px] font-semibold text-navy-700 transition-colors hover:text-urgent-600 xl:inline-flex"
+            >
+              <Phone size={17} weight="fill" className="text-urgent-600" aria-hidden="true" />
+              {contact.phone}
+            </a>
+          )}
 
-          <CartButton />
+          <Button href={actions.quote.href} size="sm" className="hidden sm:inline-flex">
+            {actions.quote.short}
+          </Button>
 
           <button
             type="button"
-            onClick={() => setIsMenuOpen(true)}
+            onClick={() => setIsMenuOpen((open) => !open)}
             aria-expanded={isMenuOpen}
             aria-controls={MENU_ID}
-            aria-label="Ouvrir le menu"
-            className="grid size-10 place-items-center rounded-[var(--radius-field)] border border-[var(--border-strong)] text-[var(--text-primary)] transition-colors duration-300 hover:bg-[var(--surface-sunken)] lg:hidden"
+            aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            className="grid size-9 place-items-center rounded-md border border-navy-200 bg-white text-navy-900 transition-colors hover:border-navy-900 lg:hidden"
           >
-            <List size={17} />
+            {isMenuOpen ? <X size={18} weight="bold" /> : <List size={18} weight="bold" />}
           </button>
         </div>
-        </div>
-      </header>
+      </div>
 
-      {/* Menu plein écran.
-          Il est SORTI du `<header>` à dessein : GSAP y applique un `transform`
-          pour l'entrée, or un ancêtre transformé devient le bloc conteneur des
-          descendants en `position: fixed`. Le menu se calait alors sur la
-          barre, haute de 80px, et son décalage de -100% ne le sortait plus de
-          l'écran : il restait visible par-dessus le hero. */}
+      <span
+        ref={progressRef}
+        aria-hidden="true"
+        className="absolute inset-x-0 -bottom-px h-0.5 origin-left scale-x-0 bg-urgent-600"
+      />
+
       <div
         id={MENU_ID}
         inert={!isMenuOpen}
         data-open={isMenuOpen}
-        className="fixed inset-0 z-50 flex -translate-y-full flex-col bg-[var(--surface)] transition-transform duration-500 ease-[var(--ease-out-expo)] data-[open=true]:translate-y-0 lg:hidden"
+        className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-400 ease-out-expo data-[open=true]:grid-rows-[1fr] lg:hidden"
       >
-        <div className="flex h-20 items-center justify-between px-5 sm:px-8">
-          <Logo tone="light" />
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Fermer le menu"
-            className="grid size-10 place-items-center rounded-[var(--radius-field)] border border-[var(--border-strong)] text-[var(--text-primary)] transition-colors duration-300 hover:bg-[var(--surface-sunken)]"
-          >
-            <X size={17} />
-          </button>
-        </div>
-
-        <nav
-          aria-label="Navigation principale"
-          className="flex flex-1 flex-col justify-center px-5 sm:px-8"
-        >
-          <ul className="flex list-none flex-col">
-            {navItems.map((item) => (
-              <li
-                key={item.id}
-                className="border-t border-[var(--border-subtle)]"
-              >
-                <a
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block py-5 text-[clamp(1.75rem,9vw,2.5rem)] leading-none font-medium tracking-[-0.03em] text-[var(--text-primary)] transition-opacity duration-300 hover:opacity-60"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-10">
-            <Button
-              href={actions.quote.href}
-              className="w-full justify-center"
-              withArrow
-            >
+        <div className="overflow-hidden">
+          <nav aria-label="Navigation mobile" className="border-t border-navy-100 px-4 pt-3 pb-5 sm:px-6">
+            <ul className="flex list-none flex-col">
+              {primaryNav.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="block rounded-md px-3 py-3 text-[16px] font-semibold text-navy-900 hover:bg-navy-50"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <Button href={actions.quote.href} onClick={closeMenu} withArrow className="mt-3 w-full">
               {actions.quote.label}
             </Button>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </div>
-    </>
+    </header>
   )
 }

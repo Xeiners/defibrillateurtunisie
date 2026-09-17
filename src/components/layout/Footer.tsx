@@ -1,230 +1,167 @@
-import { useRef } from 'react'
 import {
-  ArrowUpRight,
   EnvelopeSimple,
   FacebookLogo,
   LinkedinLogo,
   MapPin,
   Phone,
 } from '@phosphor-icons/react'
-import { useSectionReveal } from '@/animations/useSectionReveal'
-import { Logo } from '@/components/ui/Logo'
 import { Button } from '@/components/ui/Button'
-import { footerColumns, isLiveHref, legalLinks } from '@/data/navigation'
-import { contact, site, socialLinks, studio } from '@/data/site'
+import { Logo } from '@/components/ui/Logo'
+import { SplitWords } from '@/components/ui/SplitWords'
+import { legalLinks, primaryNav } from '@/data/navigation'
+import { CURRENCY, HEADLINE_PRICE } from '@/data/pricing'
+import { actions, contact, site, socialLinks, studio } from '@/data/site'
 
 const SOCIAL_ICONS = {
   linkedin: LinkedinLogo,
   facebook: FacebookLogo,
 } as const
 
-/** Crédit de l'atelier. Devient un lien dès que `studio.url` est renseigné. */
-function StudioCredit() {
-  if (studio.url === '') {
-    return (
-      <p>
-        Développé par <span className="text-white">{studio.name}</span>
-      </p>
-    )
-  }
-
-  return (
-    <p>
-      Développé par{' '}
-      <a
-        href={studio.url}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="text-white underline-offset-4 transition-colors duration-300 hover:underline"
-      >
-        {studio.name}
-      </a>
-    </p>
-  )
-}
-
 /**
- * Pied de page.
+ * Appel final + pied de page.
  *
- * Il reprend l'encre du hero et referme la page sur l'action qui l'ouvre.
- *
- * RIEN DE MORT. Aucun lien n'est rendu tant qu'il ne mène nulle part :
- * les ancres sont confrontées à `liveAnchors`, les pages légales et les
- * réseaux à leur destination. Une colonne vidée de tous ses liens disparaît
- * entièrement plutôt que de laisser un titre orphelin. Le pied de page est
- * donc court aujourd'hui et se remplira tout seul à mesure que les sections
- * reviennent — sans qu'on ait à y retoucher.
- *
- * D'où la mise en page en `flex-wrap` et non en grille à colonnes fixes :
- * elle tient aussi bien avec une colonne qu'avec quatre.
- *
- * L'adresse e-mail est le seul moyen de contact réel à ce stade : elle porte
- * l'action principale, au lieu d'un bouton qui simulerait un formulaire.
+ * Le bandeau rouge referme la page sur l'action qui l'ouvre. L'adresse e-mail
+ * est à ce jour le seul moyen de contact réel : elle porte le devis. Les liens
+ * légaux et réseaux ne s'affichent qu'une fois leur destination renseignée.
  */
 export function Footer() {
-  const footerRef = useRef<HTMLElement>(null)
-  useSectionReveal(footerRef)
-
   const mailto = `mailto:${contact.email}`
-  const activeLegal = legalLinks.filter((link) => isLiveHref(link.href))
-  const activeSocial = socialLinks.filter((link) => isLiveHref(link.href))
-
-  const activeColumns = footerColumns
-    .map((column) => ({
-      ...column,
-      items: column.items.filter((item) => isLiveHref(item.href)),
-    }))
-    .filter((column) => column.items.length > 0)
+  const activeLegal = legalLinks.filter((link) => link.href !== '')
+  const activeSocial = socialLinks.filter((link) => link.href !== '')
 
   return (
-    <footer
-      ref={footerRef}
-      id="contact"
-      className="on-deep bg-[var(--surface-deep)]"
-    >
-      <div className="mx-auto max-w-[1560px] px-5 pt-20 pb-10 sm:px-8 sm:pt-28 sm:pb-12">
-        {/* --- Appel ------------------------------------------------------ */}
-        <div
-          data-reveal
-          className="flex flex-col items-start justify-between gap-10 border-b border-[var(--on-deep-line)] pb-16 lg:flex-row lg:items-end"
+    <footer id="contact" className="on-dark bg-navy-950 text-white">
+      <div className="relative overflow-hidden bg-urgent-600">
+        <svg
+          viewBox="0 0 1200 80"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-16 w-full text-white/25"
         >
-          {/* Espace insécable avant le « ? » : règle typographique française,
-              et le point d'interrogation ne tombe plus seul en fin de ligne. */}
-          <h2 className="max-w-[13ch] text-[clamp(2.25rem,6vw,4.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-white">
-            {'Prêt à équiper vos sites ?'}
-          </h2>
+          <path
+            data-draw
+            d="M0 50 H470 L490 50 L505 12 L530 76 L550 26 L566 50 H1200"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="3"
+            strokeLinejoin="round"
+          />
+        </svg>
 
-          <div className="flex flex-col items-start gap-5">
-            <p className="max-w-[34ch] text-[15px] leading-relaxed text-[var(--on-deep-secondary)]">
-              Décrivez-nous votre site et le nombre de postes à couvrir : nous
-              revenons vers vous avec une proposition chiffrée.
+        <div className="relative mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:py-12">
+          <div>
+            <h2 data-anim="words" className="text-[clamp(1.5rem,2.8vw,2.125rem)] leading-tight font-bold tracking-[-0.02em]">
+              <SplitWords text="Ne laissez pas le hasard décider." />
+            </h2>
+            <p data-anim="up" data-delay="0.2" className="mt-2 text-[15px] text-urgent-50">
+              Devis gratuit, installation partout en Tunisie. Dès {HEADLINE_PRICE} {CURRENCY} HT par mois.
             </p>
-            <Button href={mailto} withArrow>
-              Demander un devis
+          </div>
+          <div data-anim="pop" data-delay="0.3" className="flex flex-wrap gap-2.5">
+            <Button href={mailto} variant="light" withArrow>
+              {actions.quote.label}
             </Button>
+            {contact.phone !== '' && (
+              <Button href={`tel:${contact.phone.replace(/\s/g, '')}`} variant="ghost">
+                {contact.phone}
+              </Button>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* --- Identité, navigation, contact ------------------------------- */}
-        <div className="flex flex-col gap-12 py-14 lg:flex-row lg:justify-between lg:gap-16">
-          <div data-reveal>
-            <Logo />
-            <p className="mt-5 max-w-[30ch] text-[14px] leading-relaxed text-[var(--on-deep-secondary)]">
-              {site.baseline}. Location, maintenance et formation partout en
-              Tunisie.
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2 lg:col-span-2">
+            <Logo tone="dark" />
+            <p className="mt-3 max-w-md text-[14px] leading-relaxed text-navy-300">
+              {site.baseline}. Le premier service de location de défibrillateurs
+              à coût réduit pour les entreprises, écoles, commerces et
+              collectivités.
             </p>
-          </div>
-
-          <div className="flex flex-wrap gap-x-16 gap-y-10 lg:gap-x-20">
-            {activeColumns.map((column) => (
-              <nav key={column.id} data-reveal aria-label={column.title}>
-                <p className="label-tech text-[var(--on-deep-muted)]">
-                  {column.title}
-                </p>
-                <ul className="mt-5 flex list-none flex-col gap-3">
-                  {column.items.map((item) => (
-                    <li key={item.id}>
+            {activeSocial.length > 0 && (
+              <ul className="mt-5 flex list-none gap-2">
+                {activeSocial.map((link) => {
+                  const Icon = SOCIAL_ICONS[link.id as keyof typeof SOCIAL_ICONS]
+                  return (
+                    <li key={link.id}>
                       <a
-                        href={item.href}
-                        className="text-[14px] whitespace-nowrap text-[var(--on-deep-secondary)] transition-colors duration-300 hover:text-white"
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        aria-label={link.label}
+                        className="grid size-10 place-items-center rounded-full border border-white/15 text-navy-200 transition-colors hover:border-white hover:text-white"
                       >
-                        {item.label}
+                        <Icon size={17} />
                       </a>
                     </li>
-                  ))}
-                </ul>
-              </nav>
-            ))}
+                  )
+                })}
+              </ul>
+            )}
+          </div>
 
-            <div data-reveal>
-              <p className="label-tech text-[var(--on-deep-muted)]">Contact</p>
-              <ul className="mt-5 flex list-none flex-col gap-3 text-[14px] text-[var(--on-deep-secondary)]">
-                <li className="flex items-start gap-2.5">
-                  <MapPin
-                    size={15}
-                    aria-hidden="true"
-                    className="mt-[3px] shrink-0"
-                  />
-                  {contact.city}
-                </li>
-                <li>
-                  <a
-                    href={mailto}
-                    className="group/mail flex items-start gap-2.5 transition-colors duration-300 hover:text-white"
-                  >
-                    <EnvelopeSimple
-                      size={15}
-                      aria-hidden="true"
-                      className="mt-[3px] shrink-0"
-                    />
-                    {contact.email}
-                    <ArrowUpRight
-                      size={12}
-                      aria-hidden="true"
-                      className="mt-[4px] shrink-0 opacity-0 transition-opacity duration-300 group-hover/mail:opacity-100"
-                    />
+          <nav aria-label="Plan du site">
+            <p className="text-[13px] font-bold tracking-wide text-white uppercase">Navigation</p>
+            <ul className="mt-4 flex list-none flex-col gap-2.5">
+              {primaryNav.map((item) => (
+                <li key={item.id}>
+                  <a href={item.href} className="text-[14px] text-navy-300 transition-colors hover:text-white">
+                    {item.label}
                   </a>
                 </li>
-                {/* Le bloc téléphone n'apparaît que si le numéro est fourni. */}
-                {contact.phone !== '' && (
-                  <li>
-                    <a
-                      href={`tel:${contact.phone.replace(/\s/g, '')}`}
-                      className="flex items-start gap-2.5 transition-colors duration-300 hover:text-white"
-                    >
-                      <Phone
-                        size={15}
-                        aria-hidden="true"
-                        className="mt-[3px] shrink-0"
-                      />
-                      {contact.phone}
-                    </a>
-                  </li>
-                )}
-              </ul>
+              ))}
+            </ul>
+          </nav>
 
-              {activeSocial.length > 0 && (
-                <ul className="mt-6 flex list-none items-center gap-2">
-                  {activeSocial.map((link) => {
-                    const Icon =
-                      SOCIAL_ICONS[link.id as keyof typeof SOCIAL_ICONS]
-                    return (
-                      <li key={link.id}>
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          aria-label={link.label}
-                          className="grid size-10 place-items-center rounded-[var(--radius-field)] border border-[var(--on-deep-line)] text-[var(--on-deep-secondary)] transition-colors duration-300 hover:border-[var(--accent)] hover:text-white"
-                        >
-                          <Icon size={16} />
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
+          <div>
+            <p className="text-[13px] font-bold tracking-wide text-white uppercase">Contact</p>
+            <ul className="mt-4 flex list-none flex-col gap-2.5 text-[14px] text-navy-300">
+              <li className="flex items-center gap-2.5">
+                <MapPin size={16} aria-hidden="true" className="shrink-0" />
+                {contact.city}
+              </li>
+              <li>
+                <a href={mailto} className="flex items-center gap-2.5 transition-colors hover:text-white">
+                  <EnvelopeSimple size={16} aria-hidden="true" className="shrink-0" />
+                  {contact.email}
+                </a>
+              </li>
+              {contact.phone !== '' && (
+                <li>
+                  <a
+                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                    className="flex items-center gap-2.5 transition-colors hover:text-white"
+                  >
+                    <Phone size={16} aria-hidden="true" className="shrink-0" />
+                    {contact.phone}
+                  </a>
+                </li>
               )}
-            </div>
+            </ul>
           </div>
         </div>
 
-        {/* --- Mentions ---------------------------------------------------- */}
-        <div className="flex flex-col-reverse gap-4 border-t border-[var(--on-deep-line)] pt-7 text-[13px] text-[var(--on-deep-muted)] sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col-reverse gap-3 border-t border-white/10 py-6 text-[13px] text-navy-400 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.legalName}. Tous droits réservés.
           </p>
-
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             {activeLegal.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                className="transition-colors duration-300 hover:text-white"
-              >
+              <a key={link.id} href={link.href} className="transition-colors hover:text-white">
                 {link.label}
               </a>
             ))}
-            <StudioCredit />
+            <p>
+              Développé par{' '}
+              {studio.url === '' ? (
+                <span className="text-white">{studio.name}</span>
+              ) : (
+                <a href={studio.url} target="_blank" rel="noreferrer noopener" className="text-white hover:underline">
+                  {studio.name}
+                </a>
+              )}
+            </p>
           </div>
         </div>
       </div>

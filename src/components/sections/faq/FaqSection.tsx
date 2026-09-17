@@ -1,91 +1,134 @@
-import { useRef, useState } from 'react'
-import { useSectionReveal } from '@/animations/useSectionReveal'
-import { faqEntries, faqHeading, faqIntro } from '@/data/faq'
+import { useState, type ComponentType } from 'react'
+import {
+  ArrowRight,
+  Package,
+  MapTrifold,
+  Plus,
+  Scales,
+  Timer,
+  Wallet,
+  GraduationCap,
+  type IconProps,
+} from '@phosphor-icons/react'
+import { RichText } from '@/components/ui/RichText'
+import { SectionTitle } from '@/components/ui/SectionTitle'
+import { faqEntries, type FaqEntry } from '@/data/faq'
 import { actions } from '@/data/site'
-import { Button } from '@/components/ui/Button'
-import { FaqItem } from './FaqItem'
+import { cn } from '@/lib/cn'
+
+const FAQ_ICONS: Record<string, ComponentType<IconProps>> = {
+  wallet: Wallet,
+  law: Scales,
+  training: GraduationCap,
+  box: Package,
+  map: MapTrifold,
+  timer: Timer,
+}
 
 /**
- * Section pédagogique dépliable, posée juste après le hero.
+ * Questions fréquentes.
  *
- * UN TON EN DESSOUS DU HERO. Le hero étant passé au blanc, une section blanche
- * de plus se serait fondue dedans sans qu'on voie où l'une finit : d'où le
- * fond `surface-sunken`. Le pas est léger à dessein — il marque le changement
- * de registre, il ne découpe pas la page en deux.
- *
- * UNE SEULE ENTRÉE OUVERTE. Ouvrir une réponse referme la précédente. Les
- * réponses sont longues ; toutes dépliées, la liste des questions cesse d'être
- * lisible d'un coup d'oeil et c'est justement ce qu'on vient chercher ici. La
- * première est ouverte au chargement pour montrer que ça se déplie.
- *
- * La colonne de gauche adhère au défilement : le titre reste en vue pendant
- * qu'on parcourt les réponses. Le `sticky` tombe de lui-même sous `lg`.
+ * Une seule réponse ouverte à la fois, et dans chaque réponse l'essentiel est
+ * surligné en rouge : on doit pouvoir répondre à sa question sans lire la
+ * phrase entière. Chaque question porte l'icône de son sujet.
  */
 export function FaqSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-  useSectionReveal(sectionRef)
-
-  const [openId, setOpenId] = useState<string | null>(
-    faqEntries[0]?.id ?? null,
-  )
+  const [openId, setOpenId] = useState<string | null>(faqEntries[0].id)
 
   return (
-    <section
-      id="questions"
-      ref={sectionRef}
-      className="bg-[var(--surface-sunken)] py-20 sm:py-28"
-    >
-      <div className="mx-auto grid max-w-[1560px] grid-cols-1 items-start gap-x-8 px-5 sm:px-8 lg:grid-cols-12">
-        <div
-          data-reveal
-          className="lg:sticky lg:top-24 lg:col-span-5 lg:self-start"
-        >
-          <p className="label-tech text-[var(--text-muted)]">Comprendre</p>
-          <h2 className="mt-5 max-w-[17ch] text-[clamp(1.75rem,3.6vw,2.875rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-[var(--text-primary)]">
-            {faqHeading}
-          </h2>
-          <p className="mt-6 max-w-[44ch] text-[15px] leading-relaxed text-[var(--text-secondary)]">
-            {faqIntro}
-          </p>
-
-          {/* La question qui n'est pas dans la liste se pose à quelqu'un. */}
-          <div className="mt-8 hidden lg:block">
-            <Button href={actions.quote.href} variant="outline" withArrow>
-              {actions.quote.label}
-            </Button>
-          </div>
+    <section id="faq" className="border-t border-navy-100 bg-navy-50 py-14 sm:py-20">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
+        <div>
+          <SectionTitle
+            label="Questions fréquentes"
+            title="Tout ce qu’il faut savoir"
+            accent="avant de vous équiper."
+          />
+          <a
+            data-anim="up"
+            href={actions.quote.href}
+            className="group mt-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-urgent-600"
+          >
+            Une autre question ? Écrivez-nous
+            <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </a>
         </div>
 
-        {/* La liste démarre en colonne 6 et non en 7. La colonne vide qui
-            séparait les deux blocs ajoutait une gouttière entière à celle de
-            la grille : le titre se retrouvait à l'autre bout de l'écran de la
-            question qu'il annonce. */}
-        <div className="mt-12 lg:col-span-7 lg:col-start-6 lg:mt-0">
-          {/* Le premier filet est porté par le conteneur : chaque entrée ne
-              porte que celui du bas, ce qui évite de doubler l'épaisseur aux
-              jonctions. */}
-          <div className="border-t border-[var(--border-subtle)]">
-            {faqEntries.map((entry) => (
-              <FaqItem
-                key={entry.id}
-                entry={entry}
-                isOpen={entry.id === openId}
-                onToggle={() =>
-                  setOpenId((current) =>
-                    current === entry.id ? null : entry.id,
-                  )
-                }
-              />
-            ))}
-          </div>
-
-          <div className="mt-10 lg:hidden">
-            <Button href={actions.quote.href} variant="outline" withArrow>
-              {actions.quote.label}
-            </Button>
-          </div>
+        <div data-anim="stagger" className="border-t border-navy-200">
+          {faqEntries.map((entry) => (
+            <FaqItem
+              key={entry.id}
+              entry={entry}
+              isOpen={openId === entry.id}
+              onToggle={() => setOpenId((current) => (current === entry.id ? null : entry.id))}
+            />
+          ))}
         </div>
       </div>
     </section>
+  )
+}
+
+type FaqItemProps = {
+  entry: FaqEntry
+  isOpen: boolean
+  onToggle: () => void
+}
+
+/** Hauteur animée par `grid-template-rows: 0fr -> 1fr` : la course suit le contenu. */
+function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
+  const buttonId = `question-${entry.id}`
+  const panelId = `reponse-${entry.id}`
+  const Icon = FAQ_ICONS[entry.icon]
+
+  return (
+    <div className="border-b border-navy-200">
+      <h3>
+        <button
+          type="button"
+          id={buttonId}
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+          className="group flex w-full cursor-pointer items-center gap-3.5 py-4 text-left"
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              'grid size-9 shrink-0 place-items-center rounded-md transition-colors duration-300',
+              isOpen ? 'bg-urgent-600 text-white' : 'bg-white text-navy-500 group-hover:text-urgent-600',
+            )}
+          >
+            <Icon size={18} weight={isOpen ? 'fill' : 'regular'} />
+          </span>
+
+          <span className="flex-1 text-[15px] leading-snug font-semibold text-navy-950 transition-colors group-hover:text-urgent-700 sm:text-[16px]">
+            {entry.question}
+          </span>
+
+          <Plus
+            size={16}
+            weight="bold"
+            data-open={isOpen}
+            aria-hidden="true"
+            className="shrink-0 text-navy-400 transition-transform duration-300 data-[open=true]:rotate-45 data-[open=true]:text-urgent-600"
+          />
+        </button>
+      </h3>
+
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={buttonId}
+        data-open={isOpen}
+        className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-400 ease-out-expo data-[open=true]:grid-rows-[1fr]"
+      >
+        <div className="overflow-hidden">
+          <p inert={!isOpen} className="max-w-2xl pb-5 pl-12.5 text-[14px] leading-relaxed text-navy-600 sm:text-[15px]">
+            <RichText text={entry.answer} />
+          </p>
+        </div>
+      </div>
+    </div>
   )
 }

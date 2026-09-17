@@ -1,57 +1,55 @@
-﻿import { IconContext } from '@phosphor-icons/react'
+import { useRef } from 'react'
+import { IconContext } from '@phosphor-icons/react'
+import { useScrollEffects } from '@/animations/useScrollEffects'
+import { QuoteProvider } from '@/components/quote/QuoteProvider'
+import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 import { Hero } from '@/components/sections/hero/Hero'
 import { BrandsBand } from '@/components/sections/brands/BrandsBand'
-import { PacksSection } from '@/components/sections/packs/PacksSection'
+import { SectorsSection } from '@/components/sections/sectors/SectorsSection'
+import { LawNotice } from '@/components/sections/law/LawNotice'
+import { StatsBand } from '@/components/sections/stats/StatsBand'
+import { SaveLifeSection } from '@/components/sections/save-life/SaveLifeSection'
+import { HeroCallSection } from '@/components/sections/hero-call/HeroCallSection'
+import { OffersSection } from '@/components/sections/offers/OffersSection'
 import { FaqSection } from '@/components/sections/faq/FaqSection'
-import { ProductsBand } from '@/components/sections/products/ProductsBand'
-import { AboutSection } from '@/components/sections/about/AboutSection'
-import { VideoBand } from '@/components/sections/video/VideoBand'
-import { PricingSection } from '@/components/sections/pricing/PricingSection'
-import { Footer } from '@/components/layout/Footer'
-import { CartPanel } from '@/components/cart/CartPanel'
-import { CartProvider } from '@/store/CartProvider'
 
 /**
- * Rythme de la page : clair en haut, encre en bas.
+ * Parcours de la page, dans l'ordre de la décision :
+ *   1. l'offre et le prix d'appel (hero), la confiance (marques) ;
+ *   2. suis-je concerné (secteurs) ; le projet de loi suit en notification ;
+ *   3. ce qui est en jeu (chiffres), les gestes qui sauvent, puis l'appel ;
+ *   4. ce qu'on propose (packs), les dernières objections (FAQ), l'appel final.
  *
- * Le hero ouvre sur le blanc, la pédagogie et le catalogue restent dans les
- * valeurs claires, puis la page bascule dans l'encre et n'en ressort plus :
- * « à propos » et la vidéo forment UN SEUL bloc sombre — d'où l'absence de
- * marge haute sur la vidéo, qui se poserait autrement comme une section de
- * plus — les tarifs remontent au clair le temps d'une comparaison, et le pied
- * de page referme sur l'encre.
- *
- * Les deux tons clairs (blanc et blanc cassé) alternent d'un demi-ton : assez
- * pour qu'on voie la couture entre deux sections, trop peu pour qu'on la lise
- * comme une rupture.
- *
- * TOUTE ancre visée par la navigation doit correspondre à un `id` posé ici ou
- * dans le pied de page, et être déclarée dans `liveAnchors` : c'est cette
- * liste qui empêche la barre et le pied de page de proposer des liens morts.
- *
- * Une seule famille d'icônes (Phosphor) et une seule graisse pour tout le
- * site : le réglage se fait ici, jamais au cas par cas dans les composants.
+ * `useScrollEffects` est monté ICI, au-dessus des sections : leurs animations
+ * existent déjà quand il calcule ses déclencheurs. `QuoteProvider` enveloppe le
+ * tout : c'est lui qui ouvre la fenêtre de devis, d'où qu'on la demande.
  */
 export default function App() {
+  const rootRef = useRef<HTMLDivElement>(null)
+  useScrollEffects(rootRef)
+
   return (
-    <CartProvider>
+    <QuoteProvider>
       <IconContext.Provider value={{ weight: 'regular', mirrored: false }}>
-        <main>
-          <Hero />
-          <BrandsBand />
-          <PacksSection />
-          <FaqSection />
-          <ProductsBand />
-          <AboutSection />
-          <VideoBand />
-          <PricingSection />
-        </main>
+        <div ref={rootRef}>
+          <Navbar />
+          <main>
+            <Hero />
+            <BrandsBand />
+            <SectorsSection />
+            <StatsBand />
+            <SaveLifeSection />
+            <HeroCallSection />
+            <OffersSection />
+            <FaqSection />
+          </main>
+          <Footer />
 
-        <Footer />
-
-        {/* Hors flux : le panneau du panier se superpose à la page entière. */}
-        <CartPanel />
+          {/* Hors flux : la notification suit le visiteur en bas d'écran. */}
+          <LawNotice />
+        </div>
       </IconContext.Provider>
-    </CartProvider>
+    </QuoteProvider>
   )
 }
