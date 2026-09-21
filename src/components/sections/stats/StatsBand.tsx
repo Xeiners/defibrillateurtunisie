@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { Brain, HeartBreak, Heartbeat, Skull, type IconProps } from '@phosphor-icons/react'
 import { SplitWords } from '@/components/ui/SplitWords'
 import { stats, survivalByMinute } from '@/data/landing'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 const MAX_SURVIVAL = Math.max(...survivalByMinute.map((point) => point.survival))
 
@@ -35,6 +36,7 @@ const STAT_ICONS: Record<string, ComponentType<IconProps>> = {
 }
 
 export function StatsBand() {
+  const { locale, t } = useLocale()
   const otherStats = stats.filter((stat) => stat.id !== 'minute' && stat.id !== 'survie')
 
   return (
@@ -43,7 +45,7 @@ export function StatsBand() {
         <div>
           <p data-anim="left" className="flex items-center gap-3 text-[12px] font-semibold tracking-[0.12em] text-navy-300 uppercase">
             <span aria-hidden="true" className="h-px w-6 bg-urgent-500" />
-            Ce qui se joue
+            {locale === 'en' ? 'What is at stake' : 'Ce qui se joue'}
           </p>
 
           <h2
@@ -51,8 +53,8 @@ export function StatsBand() {
             data-anim="words"
             className="mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.05] font-bold tracking-[-0.03em] text-white"
           >
-            <SplitWords text="Chaque minute sans défibrillateur :" />{' '}
-            <SplitWords text="10 % de survie en moins." className="text-urgent-400" />
+            <SplitWords text={locale === 'en' ? 'Every minute without a defibrillator:' : 'Chaque minute sans défibrillateur :'} />{' '}
+            <SplitWords text={locale === 'en' ? '10% lower survival.' : '10 % de survie en moins.'} className="text-urgent-400" />
           </h2>
 
           {/* Ce que la courbe ne montre pas : le temps du cerveau, et qui est touché. */}
@@ -62,9 +64,9 @@ export function StatsBand() {
                 <StatIcon id={stat.id} />
 <dd className="tabular shrink-0 text-[clamp(1.75rem,3vw,2.5rem)] leading-none font-bold tracking-[-0.03em] text-white">
                   <span data-count={stat.count}>{stat.count}</span>
-                  <span className="text-[0.55em] text-urgent-400">{stat.suffix}</span>
+                  <span className="text-[0.55em] text-urgent-400">{t(stat.suffix)}</span>
                 </dd>
-                <dt className="text-[14px] leading-snug text-navy-300">{stat.label}</dt>
+                <dt className="text-[14px] leading-snug text-navy-300">{t(stat.label)}</dt>
               </div>
             ))}
           </dl>
@@ -96,21 +98,22 @@ function StatIcon({ id }: { id: string }) {
  * clavier. Le repère horizontal à 50 % donne l'échelle sans grille chargée.
  */
 function SurvivalChart() {
+  const { locale } = useLocale()
   return (
     <figure className="min-w-0">
       <figcaption className="text-[15px] font-semibold text-white">
-        Chances de survie, minute par minute
+        {locale === 'en' ? 'Chances of survival, minute by minute' : 'Chances de survie, minute par minute'}
       </figcaption>
 
       {/* Légende : ce que disent les deux bouts de la courbe. */}
       <ul className="mt-3 flex list-none flex-wrap gap-x-5 gap-y-2">
         <li className="flex items-center gap-2 text-[13px] text-navy-200">
           <Heartbeat size={18} weight="fill" className="text-urgent-400" aria-hidden="true" />
-          1 à 3 min : le cœur peut repartir
+          {locale === 'en' ? '1 to 3 min: the heart can restart' : '1 à 3 min : le cœur peut repartir'}
         </li>
         <li className="flex items-center gap-2 text-[13px] text-navy-400">
           <Skull size={18} weight="fill" aria-hidden="true" />
-          Après 8 min : quasi aucune chance
+          {locale === 'en' ? 'After 8 min: almost no chance' : 'Après 8 min : quasi aucune chance'}
         </li>
       </ul>
 
@@ -133,6 +136,7 @@ function SurvivalChart() {
                 style={{ opacity: 1 - index * 0.07 }}
               >
                 <span
+                  data-bar
                   className="w-full rounded-t-sm bg-urgent-500 transition-colors duration-300 group-hover:bg-urgent-400 group-focus-visible:bg-urgent-400"
                   style={{ height: `${barHeight(point.survival)}%` }}
                 />
@@ -188,12 +192,11 @@ function SurvivalChart() {
             </li>
           ))}
         </ul>
-        <p className="mt-1 text-right text-[11px] text-navy-500">minutes après l’arrêt</p>
+        <p className="mt-1 text-right text-[11px] text-navy-500">{locale === 'en' ? 'minutes after cardiac arrest' : 'minutes après l’arrêt'}</p>
       </div>
 
       <p className="mt-3 text-[12px] leading-snug text-navy-500">
-        Estimation d’après la règle des −10 points par minute (European
-        Resuscitation Council).
+        {locale === 'en' ? 'Estimate based on the 10-point decrease per minute rule (European Resuscitation Council).' : 'Estimation d’après la règle des −10 points par minute (European Resuscitation Council).'}
       </p>
     </figure>
   )

@@ -53,7 +53,7 @@ export function Button({
       onClick={onClick}
       className={cn(
         'group/btn inline-flex items-center justify-center gap-2 rounded-md font-semibold whitespace-nowrap',
-        'transition-[background-color,border-color,color,transform] duration-300 active:scale-[0.98]',
+        'transition-[background-color,border-color,color,translate,scale] duration-300 active:scale-[0.98]',
         SIZE[size],
         VARIANT[variant],
         className,

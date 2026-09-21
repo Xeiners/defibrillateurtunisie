@@ -13,6 +13,7 @@ import { rescueSteps, type RescueStep } from '@/data/landing'
 import { CURRENCY, HEADLINE_PRICE } from '@/data/pricing'
 import { actions } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 const STEP_ICONS: Record<string, ComponentType<IconProps>> = {
   reconnaitre: Warning,
@@ -33,6 +34,7 @@ const IMAGE_EXTENSIONS = ['webp', 'jpg', 'png']
  * dépend d'un appareil, et le bandeau dit ce qui se passe quand il manque.
  */
 export function SaveLifeSection() {
+  const { locale } = useLocale()
   return (
     <section
       id="sauver-une-vie"
@@ -40,10 +42,10 @@ export function SaveLifeSection() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionTitle
-          label="Avant l’arrivée des secours"
-          title="Les 4 gestes"
-          accent="qui sauvent."
-          intro="Aucune formation médicale nécessaire. Nous formons tout de même vos équipes."
+          label={locale === 'en' ? 'Before emergency services arrive' : 'Avant l’arrivée des secours'}
+          title={locale === 'en' ? '4 actions' : 'Les 4 gestes'}
+          accent={locale === 'en' ? 'that save lives.' : 'qui sauvent.'}
+          intro={locale === 'en' ? 'No medical training required. We still train your teams.' : 'Aucune formation médicale nécessaire. Nous formons tout de même vos équipes.'}
         />
 
         <ol data-anim="stagger" className="mt-8 grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -71,6 +73,7 @@ export function SaveLifeSection() {
 }
 
 function StepCard({ step, index }: { step: RescueStep; index: number }) {
+  const { t } = useLocale()
   const [attempt, setAttempt] = useState(0)
   const Icon = STEP_ICONS[step.id]
   const isLast = index === rescueSteps.length - 1
@@ -117,11 +120,11 @@ function StepCard({ step, index }: { step: RescueStep; index: number }) {
           >
             <Icon size={16} weight="fill" aria-hidden="true" />
           </span>
-          {step.title}
+          {t(step.title)}
         </h3>
 
         <p className="mt-2.5 text-[13.5px] leading-relaxed text-navy-500">
-          <RichText text={step.body} />
+          <RichText text={t(step.body)} />
         </p>
       </div>
 
@@ -131,6 +134,7 @@ function StepCard({ step, index }: { step: RescueStep; index: number }) {
 
 /** Ce que la série implique pour l'établissement : le geste 4 a besoin d'un appareil. */
 function ClosingBanner() {
+  const { locale } = useLocale()
   return (
     <aside
       data-anim="pop"
@@ -142,11 +146,10 @@ function ClosingBanner() {
         </span>
         <div>
           <p className="text-[clamp(1.125rem,2vw,1.5rem)] leading-tight font-bold">
-            Et si ça arrivait chez vous, sans défibrillateur ?
+            {locale === 'en' ? 'What if it happened on your premises, without a defibrillator?' : 'Et si ça arrivait chez vous, sans défibrillateur ?'}
           </p>
           <p className="mt-1.5 text-[14px] leading-snug text-urgent-50">
-            Le 4<sup>e</sup> geste devient impossible : les secours arrivent trop
-            tard pour celui-là. L’appareil doit déjà être sur place.
+            {locale === 'en' ? <>The 4<sup>th</sup> action becomes impossible: emergency services arrive too late for that step. The device must already be on site.</> : <>Le 4<sup>e</sup> geste devient impossible : les secours arrivent trop tard pour celui-là. L’appareil doit déjà être sur place.</>}
           </p>
         </div>
       </div>
@@ -155,7 +158,7 @@ function ClosingBanner() {
         href={actions.quote.href}
         className="group inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-md bg-white px-5 text-[14px] font-semibold text-urgent-700 transition-colors hover:bg-urgent-50"
       >
-        En louer un dès {HEADLINE_PRICE} {CURRENCY}/mois
+        {locale === 'en' ? `Rent one from ${HEADLINE_PRICE} ${CURRENCY}/month` : `En louer un dès ${HEADLINE_PRICE} ${CURRENCY}/mois`}
         <ArrowRight size={15} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
       </a>
     </aside>

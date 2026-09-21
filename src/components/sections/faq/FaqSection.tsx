@@ -15,6 +15,7 @@ import { SectionTitle } from '@/components/ui/SectionTitle'
 import { faqEntries, type FaqEntry } from '@/data/faq'
 import { actions } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 const FAQ_ICONS: Record<string, ComponentType<IconProps>> = {
   wallet: Wallet,
@@ -33,6 +34,7 @@ const FAQ_ICONS: Record<string, ComponentType<IconProps>> = {
  * phrase entière. Chaque question porte l'icône de son sujet.
  */
 export function FaqSection() {
+  const { locale } = useLocale()
   const [openId, setOpenId] = useState<string | null>(faqEntries[0].id)
 
   return (
@@ -40,16 +42,16 @@ export function FaqSection() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_1.6fr] lg:gap-14">
         <div>
           <SectionTitle
-            label="Questions fréquentes"
-            title="Tout ce qu’il faut savoir"
-            accent="avant de vous équiper."
+            label={locale === 'en' ? 'Frequently asked questions' : 'Questions fréquentes'}
+            title={locale === 'en' ? 'Everything you need to know' : 'Tout ce qu’il faut savoir'}
+            accent={locale === 'en' ? 'before getting equipped.' : 'avant de vous équiper.'}
           />
           <a
             data-anim="up"
             href={actions.quote.href}
             className="group mt-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-urgent-600"
           >
-            Une autre question ? Écrivez-nous
+            {locale === 'en' ? 'Another question? Contact us' : 'Une autre question ? Écrivez-nous'}
             <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </a>
         </div>
@@ -77,6 +79,7 @@ type FaqItemProps = {
 
 /** Hauteur animée par `grid-template-rows: 0fr -> 1fr` : la course suit le contenu. */
 function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
+  const { t } = useLocale()
   const buttonId = `question-${entry.id}`
   const panelId = `reponse-${entry.id}`
   const Icon = FAQ_ICONS[entry.icon]
@@ -103,7 +106,7 @@ function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
           </span>
 
           <span className="flex-1 text-[15px] leading-snug font-semibold text-navy-950 transition-colors group-hover:text-urgent-700 sm:text-[16px]">
-            {entry.question}
+            {t(entry.question)}
           </span>
 
           <Plus
@@ -121,11 +124,11 @@ function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
         role="region"
         aria-labelledby={buttonId}
         data-open={isOpen}
-        className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-400 ease-out-expo data-[open=true]:grid-rows-[1fr]"
+        className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-350 ease-smooth data-[open=true]:grid-rows-[1fr]"
       >
         <div className="overflow-hidden">
           <p inert={!isOpen} className="max-w-2xl pb-5 pl-12.5 text-[14px] leading-relaxed text-navy-600 sm:text-[15px]">
-            <RichText text={entry.answer} />
+            <RichText text={t(entry.answer)} />
           </p>
         </div>
       </div>

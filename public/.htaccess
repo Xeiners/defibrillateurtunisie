@@ -1,0 +1,11 @@
+# Application a deux pages : toute adresse inconnue (/devis) renvoie index.html,
+# sinon le serveur repond 404 sur un rechargement direct.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteRule . /index.html [L]
+</IfModule>

@@ -1,4 +1,5 @@
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 /**
  * Panneau « Ce site est équipé d'un défibrillateur », en autocollant.
@@ -8,10 +9,11 @@ import { cn } from '@/lib/cn'
  * symbole international du DAE (coeur, éclair, croix).
  */
 export function AedSign({ className }: { className?: string }) {
+  const { locale } = useLocale()
   return (
     <div
       role="img"
-      aria-label="Panneau : ce site est équipé d’un défibrillateur"
+      aria-label={locale === 'en' ? 'Sign: this site is equipped with a defibrillator' : 'Panneau : ce site est équipé d’un défibrillateur'}
       className={cn(
         'flex items-stretch gap-1.5 rounded-lg bg-white p-1.5 shadow-[0_14px_30px_-12px_rgb(7_18_36/0.45)]',
         className,
@@ -29,9 +31,9 @@ export function AedSign({ className }: { className?: string }) {
       </div>
       <div className="flex flex-1 flex-col justify-center rounded-md bg-brand-600 px-3 py-2 text-center text-white">
         <p className="text-[13px] leading-[1.15] font-extrabold uppercase sm:text-[15px]">
-          Ce site est équipé
+          {locale === 'en' ? 'This site has' : 'Ce site est équipé'}
           <br />
-          d’un défibrillateur
+          {locale === 'en' ? 'a defibrillator' : 'd’un défibrillateur'}
         </p>
       </div>
     </div>

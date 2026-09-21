@@ -3,6 +3,7 @@ import { ArrowUpRight, Scales, X } from '@phosphor-icons/react'
 import { TunisiaFlag } from '@/components/ui/TunisiaFlag'
 import { lawNews } from '@/data/landing'
 import { actions } from '@/data/site'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 /** Court temps mort avant l'entrée : la bande se pose, elle ne surgit pas. */
 const REVEAL_DELAY = 400
@@ -18,6 +19,7 @@ const REVEAL_DELAY = 400
  * clic.
  */
 export function LawNotice() {
+  const { locale } = useLocale()
   const [isDismissed, setIsDismissed] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -30,9 +32,9 @@ export function LawNotice() {
 
   return (
     <aside
-      aria-label="Actualité réglementaire"
+      aria-label={locale === 'en' ? 'Regulatory news' : 'Actualité réglementaire'}
       data-open={isVisible}
-      className="fixed inset-x-0 bottom-0 z-40 translate-y-full bg-urgent-600 text-white shadow-[0_-8px_30px_-12px_rgb(7_18_36/0.5)] transition-transform duration-600 ease-out-expo data-[open=true]:translate-y-0"
+      className="fixed inset-x-0 bottom-0 z-40 translate-y-full bg-urgent-600 text-white shadow-[0_-8px_30px_-12px_rgb(7_18_36/0.5)] transition-transform duration-500 ease-smooth data-[open=true]:translate-y-0"
     >
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         <span className="hidden size-10 shrink-0 place-items-center rounded-md bg-white/15 sm:grid">
@@ -42,14 +44,14 @@ export function LawNotice() {
         <div className="min-w-0 flex-1">
           <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.1em] text-urgent-100 uppercase">
             <TunisiaFlag className="h-3 w-auto" />
-            Tunisie · {lawNews.date}
+            {locale === 'en' ? 'Tunisia' : 'Tunisie'} · {locale === 'en' ? '4 July 2026' : lawNews.date}
           </p>
           <p className="mt-0.5 text-[13px] leading-snug sm:text-[14px]">
             <strong className="font-semibold">
-              Le ministère de la Santé prépare un projet de loi
+              {locale === 'en' ? 'The Ministry of Health is preparing draft legislation' : 'Le ministère de la Santé prépare un projet de loi'}
             </strong>{' '}
             <span className="text-urgent-50">
-              pour installer des défibrillateurs dans les lieux publics.
+              {locale === 'en' ? 'to install defibrillators in public places.' : 'pour installer des défibrillateurs dans les lieux publics.'}
             </span>{' '}
             <a
               href={lawNews.source.href}
@@ -67,13 +69,13 @@ export function LawNotice() {
           href={actions.quote.href}
           className="hidden h-9 shrink-0 items-center rounded-md bg-white px-4 text-[13px] font-semibold text-urgent-700 transition-colors hover:bg-urgent-50 sm:inline-flex"
         >
-          Anticiper
+          {locale === 'en' ? 'Get ahead' : 'Anticiper'}
         </a>
 
         <button
           type="button"
           onClick={() => setIsDismissed(true)}
-          aria-label="Fermer cette actualité"
+          aria-label={locale === 'en' ? 'Close this news item' : 'Fermer cette actualité'}
           className="grid size-9 shrink-0 place-items-center rounded-md text-urgent-100 transition-colors hover:bg-white/15 hover:text-white"
         >
           <X size={16} weight="bold" />

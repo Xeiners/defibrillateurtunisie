@@ -1,5 +1,6 @@
 import { site } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 type LogoProps = {
   /** `dark` = posé sur fond sombre, `light` = posé sur fond clair. */
@@ -12,10 +13,11 @@ type LogoProps = {
  * nom au pays, qui est l'argument central de l'offre.
  */
 export function Logo({ tone = 'light', className }: LogoProps) {
+  const { locale } = useLocale()
   return (
     <a
-      href="#top"
-      aria-label={`${site.name}, retour en haut de page`}
+      href="/#top"
+      aria-label={`${site.name}, ${locale === 'en' ? 'back to home' : 'retour à l’accueil'}`}
       className={cn(
         'inline-flex items-center gap-2 transition-opacity duration-300 hover:opacity-80',
         tone === 'dark' ? 'text-white' : 'text-navy-950',

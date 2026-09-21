@@ -4,6 +4,7 @@ import { useMarqueeCopies } from '@/animations/useMarqueeCopies'
 import { usePrefersReducedMotion } from '@/animations/usePrefersReducedMotion'
 import { brands } from '@/data/brands'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 const EDGE_FADE =
   'linear-gradient(to right, transparent 0, black 15%, black 85%, transparent 100%)'
@@ -17,6 +18,7 @@ const EDGE_FADE =
  * logos se rangent sur une ligne centrée.
  */
 export function BrandsBand() {
+  const { locale } = useLocale()
   const viewportRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLUListElement>(null)
   const prefersReducedMotion = usePrefersReducedMotion()
@@ -34,7 +36,7 @@ export function BrandsBand() {
   })
 
   return (
-    <section aria-labelledby="confiance-titre" className="bg-white pt-14 pb-8 sm:pt-16">
+    <section aria-labelledby="confiance-titre" className="bg-white pt-1">
       <div className="mx-auto flex max-w-3xl items-center gap-4 px-4 sm:px-6">
         <span aria-hidden="true" className="h-px flex-1 bg-linear-to-r from-transparent to-navy-200" />
         <h2
@@ -42,7 +44,7 @@ export function BrandsBand() {
           data-anim="pop"
           className="text-center text-[15px] font-semibold text-navy-700 sm:text-[16px]"
         >
-          Ils nous font <span className="text-urgent-600">confiance</span>
+          {locale === 'en' ? <>Trusted by leading <span className="text-urgent-600">organisations</span></> : <>Ils nous font <span className="text-urgent-600">confiance</span></>}
         </h2>
         <span aria-hidden="true" className="h-px flex-1 bg-linear-to-l from-transparent to-navy-200" />
       </div>

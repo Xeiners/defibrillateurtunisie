@@ -21,6 +21,7 @@ import {
 } from '@phosphor-icons/react'
 import type { ComponentType } from 'react'
 import { CabinetModel } from '@/components/ui/CabinetModel'
+import { PackImage } from '@/components/ui/PackImage'
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import {
   CURRENCY,
@@ -33,6 +34,8 @@ import {
 } from '@/data/pricing'
 import { actions } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useQuote } from '@/store/quote-context'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 /** Une icône par élément commun aux trois packs. */
 const INCLUDE_ICONS: Record<string, ComponentType<IconProps>> = {
@@ -65,16 +68,21 @@ const FEATURE_ICONS: Record<string, ComponentType<IconProps>> = {
  *
  * La durée d'engagement est un sélecteur : on la change, le loyer suit. Le
  * pack s'ouvre sur la durée la plus longue, donc sur le prix le plus bas.
+ *
+ * « Choisir ce pack » ne fait pas défiler vers un formulaire : il AJOUTE le
+ * pack — avec la durée affichée à cet instant — puis mène à `/devis`, où la
+ * carte se retrouve telle quelle. Le visiteur ne ressaisit rien.
  */
 export function OffersSection() {
+  const { locale } = useLocale()
   return (
     <section id="offres" className="bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <SectionTitle
-          label="Nos packs"
-          title="Trois appareils,"
-          accent="tout compris."
-          intro="Location clé en main : vous choisissez l’appareil, nous nous occupons du reste."
+          label={locale === 'en' ? 'Our packages' : 'Nos packs'}
+          title={locale === 'en' ? 'Three devices,' : 'Trois appareils,'}
+          accent={locale === 'en' ? 'everything included.' : 'tout compris.'}
+          intro={locale === 'en' ? 'Turnkey rental: you choose the device, we take care of everything else.' : 'Location clé en main : vous choisissez l’appareil, nous nous occupons du reste.'}
         />
 
         <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -91,10 +99,11 @@ export function OffersSection() {
 }
 
 function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
-  const [attempt, setAttempt] = useState(0)
+  const { locale, t } = useLocale()
+  const { add, has } = useQuote()
   const [termIndex, setTermIndex] = useState(() => defaultTermIndex(pack))
-  const image = pack.images[attempt]
   const isPopular = pack.isPopular === true
+  const isSelected = has(pack.id)
   const term = pack.terms[termIndex]
   const reference = basePrice(pack)
 
@@ -104,7 +113,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
       data-delay={String(delay)}
       className={cn(
         'group/pack relative flex flex-col overflow-hidden rounded-xl border bg-white',
-        'transition-[transform,box-shadow,border-color] duration-300 ease-out-expo hover:-translate-y-1.5',
+        'transition-[translate,scale,box-shadow,border-color] duration-250 ease-smooth will-change-transform hover:-translate-y-1.5',
         isPopular
           ? 'border-2 border-urgent-600 shadow-[0_24px_50px_-30px_rgb(216_30_39/0.55)] hover:shadow-[0_34px_60px_-28px_rgb(216_30_39/0.6)]'
           : 'border-navy-100 hover:border-navy-300 hover:shadow-[0_30px_55px_-32px_rgb(7_18_36/0.5)]',
@@ -113,7 +122,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
       {isPopular && (
         <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 rounded-full bg-urgent-600 px-2.5 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
           <Star size={11} weight="fill" aria-hidden="true" />
-          Le plus choisi
+          {locale === 'en' ? 'Most popular' : 'Le plus choisi'}
         </span>
       )}
 
@@ -121,30 +130,35 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
           derrière elles se verrait comme un rectangle. L'appareil occupe toute
           la case, c'est lui qu'on vient regarder. */}
       <div className="relative h-44 shrink-0 overflow-hidden bg-white sm:h-48">
-        {image ? (
-          <img
-            src={image}
-            alt={pack.device}
-            loading="lazy"
-            onError={() => setAttempt((current) => current + 1)}
-            className="absolute inset-0 size-full object-contain p-3 transition-transform duration-500 ease-out-expo group-hover/pack:scale-105"
-          />
-        ) : null}
+        <PackImage
+          pack={pack}
+          className="absolute inset-0 size-full object-contain p-3 transition-transform duration-400 ease-smooth group-hover/pack:scale-105"
+        />
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <p className="text-[11px] font-bold tracking-[0.14em] text-urgent-600 uppercase">
-          Pack {pack.name}
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="text-[11px] font-bold tracking-[0.14em] text-urgent-600 uppercase">
+            {locale === 'en' ? 'Package' : 'Pack'} {t(pack.name)}
+          </span>
+          {/* Le pack déjà retenu le dit ici : la carte reste identique, seul
+              l'état change. */}
+          {isSelected && (
+            <span className="animate-pop inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-700 uppercase">
+              <Check size={9} weight="bold" aria-hidden="true" />
+              {locale === 'en' ? 'In your quote' : 'Dans votre devis'}
+            </span>
+          )}
         </p>
         <h3 className="mt-1 text-[17px] leading-tight font-bold text-navy-950">{pack.device}</h3>
         <p className="mt-0.5 text-[13px] text-navy-400">
-          {pack.deviceType} · {pack.summary}
+          {t(pack.deviceType)} · {t(pack.summary)}
         </p>
 
         {/* Durée d'engagement : c'est un CHOIX, et il fait bouger le prix. */}
         <div
           role="group"
-          aria-label={`Durée d’engagement du pack ${pack.name}`}
+          aria-label={locale === 'en' ? `Commitment period for the ${t(pack.name)} package` : `Durée d’engagement du pack ${pack.name}`}
           className="mt-3 flex gap-1 rounded-md bg-navy-50 p-1"
         >
           {pack.terms.map((option, index) => {
@@ -160,7 +174,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
                   isActive ? 'bg-white text-navy-950 shadow-(--shadow-card)' : 'text-navy-500 hover:text-navy-900',
                 )}
               >
-                {option.months} mois
+                {option.months} {locale === 'en' ? 'months' : 'mois'}
               </button>
             )
           })}
@@ -172,7 +186,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
             <span className="tabular text-[30px] leading-none font-bold tracking-[-0.03em] text-navy-950">
               {term.monthly}
             </span>
-            <span className="text-[13px] font-semibold text-navy-500">{CURRENCY}/mois</span>
+            <span className="text-[13px] font-semibold text-navy-500">{CURRENCY}/{locale === 'en' ? 'month' : 'mois'}</span>
           </p>
 
           {/* Tarif de référence barré : la remise de l'engagement se voit. */}
@@ -202,7 +216,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
                   <Icon size={13} weight="bold" aria-hidden="true" />
                 </span>
                 <span className={feature.included ? 'text-navy-700' : 'text-navy-300 line-through decoration-navy-200'}>
-                  {feature.label}
+                  {t(feature.label)}
                 </span>
                 {feature.included ? (
                   <Check size={13} weight="bold" className="ml-auto shrink-0 text-brand-600" aria-hidden="true" />
@@ -214,18 +228,26 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
           })}
         </ul>
 
+        {/* Un `<a>` et non un `<button>` : le routeur intercepte le clic, mais
+            « ouvrir dans un nouvel onglet » mène toujours à la page de devis. */}
         <a
           href={actions.quote.href}
-          aria-label={`Demander un devis pour le pack ${pack.name}`}
+          onClick={() => add(pack.id, term.months)}
+          aria-label={locale === 'en' ? `Add the ${t(pack.name)} package for ${term.months} months to my quote` : `Ajouter le pack ${pack.name} sur ${term.months} mois à mon devis`}
           className={cn(
-            'group mt-auto inline-flex h-10 items-center justify-center gap-2 rounded-md text-[14px] font-semibold transition-colors duration-300',
+            'group mt-auto inline-flex h-10 items-center justify-center gap-2 rounded-md text-[14px] font-semibold transition-colors duration-250',
             isPopular
               ? 'bg-urgent-600 text-white hover:bg-urgent-700'
               : 'bg-navy-950 text-white hover:bg-urgent-600',
           )}
         >
-          Choisir ce pack
-          <ArrowRight size={15} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          {isSelected ? (locale === 'en' ? 'View in my quote' : 'Voir dans mon devis') : (locale === 'en' ? 'Choose this package' : 'Choisir ce pack')}
+          <ArrowRight
+            size={15}
+            weight="bold"
+            className="transition-transform duration-250 group-hover:translate-x-1"
+            aria-hidden="true"
+          />
         </a>
       </div>
     </article>
@@ -241,6 +263,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
  * avec les pastilles d'icônes.
  */
 function CommonIncludes() {
+  const { locale, t } = useLocale()
   return (
     <div
       data-anim="up"
@@ -255,17 +278,17 @@ function CommonIncludes() {
         <CabinetModel className="h-36 sm:h-40" />
         <p className="pointer-events-none absolute top-0 left-0 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-white">
           <Cube size={13} weight="bold" aria-hidden="true" />
-          Faites-la pivoter
+          {locale === 'en' ? 'Rotate it' : 'Faites-la pivoter'}
         </p>
       </div>
 
       <div className="relative min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-3">
           <h3 className="text-[18px] font-bold text-white sm:text-[20px]">
-            Inclus dans les trois packs
+            {locale === 'en' ? 'Included in all three packages' : 'Inclus dans les trois packs'}
           </h3>
           <span className="rounded-full bg-brand-500/15 px-2.5 py-1 text-[11px] font-bold tracking-wide text-brand-400 uppercase">
-            Sans supplément
+            {locale === 'en' ? 'No extra charge' : 'Sans supplément'}
           </span>
         </div>
 
@@ -280,7 +303,7 @@ function CommonIncludes() {
                 <span className="grid size-9 shrink-0 place-items-center rounded-md bg-brand-500/15 text-brand-400">
                   <Icon size={17} weight="bold" aria-hidden="true" />
                 </span>
-                <span className="text-[13.5px] leading-snug text-navy-100">{item.label}</span>
+                <span className="text-[13.5px] leading-snug text-navy-100">{t(item.label)}</span>
               </li>
             )
           })}
@@ -292,6 +315,7 @@ function CommonIncludes() {
 
 /** Pour qui ne veut pas louer : la boutique d'achat du groupe, à ses couleurs. */
 function PurchaseBanner() {
+  const { locale } = useLocale()
   return (
     <div
       data-anim="up"
@@ -312,10 +336,10 @@ function PurchaseBanner() {
         />
         <div>
           <p className="text-[16px] font-bold text-navy-950 sm:text-[18px]">
-            Vous préférez posséder votre défibrillateur ?
+            {locale === 'en' ? 'Would you rather own your defibrillator?' : 'Vous préférez posséder votre défibrillateur ?'}
           </p>
           <p className="mt-1 text-[14px] text-navy-500">
-            Nos appareils sont aussi à l’achat sur {purchaseSite.label}.
+            {locale === 'en' ? `Our devices are also available to buy at ${purchaseSite.label}.` : `Nos appareils sont aussi à l’achat sur ${purchaseSite.label}.`}
           </p>
         </div>
       </div>
@@ -333,7 +357,7 @@ function PurchaseBanner() {
           event.currentTarget.style.backgroundColor = purchaseSite.brandDeep
         }}
       >
-        Acheter sur {purchaseSite.label}
+        {locale === 'en' ? `Buy at ${purchaseSite.label}` : `Acheter sur ${purchaseSite.label}`}
         <ArrowUpRight size={15} weight="bold" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
       </a>
     </div>

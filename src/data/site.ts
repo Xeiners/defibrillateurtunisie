@@ -15,9 +15,10 @@ export const site = {
 } as const
 
 export const actions = {
-  /** À rebrancher sur un vrai formulaire quand il existera. */
-  quote: { label: 'Demander un devis gratuit', short: 'Devis gratuit', href: '#contact' },
-  offers: { label: 'Voir nos packs', href: '#offres' },
+  /** Page de devis. Les liens internes sont interceptés par le routeur. */
+  quote: { label: 'Demander un devis gratuit', short: 'Devis gratuit', href: '/devis' },
+  /** Ancre de l'accueil : préfixée par `/` pour fonctionner aussi depuis /devis. */
+  offers: { label: 'Voir nos packs', href: '/#offres' },
 } as const
 
 export type Studio = {

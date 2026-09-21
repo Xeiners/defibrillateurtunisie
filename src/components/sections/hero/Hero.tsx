@@ -8,6 +8,7 @@ import { heroSlides, type HeroSlide } from '@/data/landing'
 import { CURRENCY, HEADLINE_PRICE } from '@/data/pricing'
 import { actions } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 const HIGHLIGHTS = ['Zéro investissement', 'Installation et maintenance', 'Partout en Tunisie']
 
@@ -28,6 +29,7 @@ const FADE_X = 'linear-gradient(to right, transparent, black 10%, black 90%, tra
  * règle « mouvement réduit » le fige.
  */
 export function Hero() {
+  const { locale, t } = useLocale()
   const [missing, setMissing] = useState<ReadonlySet<string>>(new Set())
   const slides = heroSlides.filter((slide) => !missing.has(slide.src))
 
@@ -38,7 +40,7 @@ export function Hero() {
   const columnB = slides.filter((_, index) => index % 2 === 1)
 
   return (
-    <section id="top" className="overflow-x-clip border-b border-navy-100 bg-white">
+    <section id="top" className="overflow-x-clip bg-white">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 pt-8 pb-14 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-12 lg:py-10">
         {/* `min-w-0` sur les deux colonnes : la rangée d'images en `w-max`
             élargirait sinon la grille au-delà de l'écran en mobile. */}
@@ -46,7 +48,7 @@ export function Hero() {
           <p data-anim="left" className="flex items-center gap-2 text-[13px] font-semibold text-navy-700">
             <TunisiaFlag className="h-3.5 w-auto" />
             <span>
-              <span className="text-urgent-600">N°1 en Tunisie</span> · Premier service de location de DAE
+              <span className="text-urgent-600">{locale === 'en' ? 'No. 1 in Tunisia' : 'N°1 en Tunisie'}</span> · {locale === 'en' ? 'The first AED rental service' : 'Premier service de location de DAE'}
             </span>
           </p>
 
@@ -54,22 +56,23 @@ export function Hero() {
             data-anim="words"
             className="mt-3 text-[clamp(1.875rem,3.4vw,2.75rem)] leading-[1.1] font-bold tracking-tight text-navy-950"
           >
-            <SplitWords text="Votre défibrillateur en" />{' '}
-            <SplitWords text="location," className="text-urgent-600" />{' '}
-            <SplitWords text={`dès ${HEADLINE_PRICE} ${CURRENCY} par mois.`} />
+            <SplitWords text={locale === 'en' ? 'Rent your defibrillator' : 'Votre défibrillateur en'} />{' '}
+            <SplitWords text={locale === 'en' ? 'from' : 'location,'} className="text-urgent-600" />{' '}
+            <SplitWords text={locale === 'en' ? `${HEADLINE_PRICE} ${CURRENCY} per month.` : `dès ${HEADLINE_PRICE} ${CURRENCY} par mois.`} />
           </h1>
 
           <p data-anim="up" data-delay="0.25" className="mt-4 max-w-md text-[15px] leading-relaxed text-navy-500">
-            Appareil, armoire murale, signalétique, installation, maintenance et
-            formation : tout est inclus. Sans rien acheter.
+            {locale === 'en'
+              ? 'Device, wall cabinet, signage, installation, maintenance and training: everything is included. No purchase required.'
+              : 'Appareil, armoire murale, signalétique, installation, maintenance et formation : tout est inclus. Sans rien acheter.'}
           </p>
 
           <div data-anim="up" data-delay="0.35" className="mt-6 flex flex-wrap gap-2.5">
             <Button href={actions.quote.href} withArrow>
-              {actions.quote.label}
+              {t(actions.quote.label)}
             </Button>
             <Button href={actions.offers.href} variant="outline">
-              {actions.offers.label}
+              {t(actions.offers.label)}
             </Button>
           </div>
 
@@ -77,7 +80,7 @@ export function Hero() {
             {HIGHLIGHTS.map((item) => (
               <li key={item} className="flex items-center gap-1.5 text-[13px] font-medium text-navy-600">
                 <Check size={14} weight="bold" className="text-brand-600" aria-hidden="true" />
-                {item}
+                {t(item)}
               </li>
             ))}
           </ul>
@@ -110,7 +113,7 @@ export function Hero() {
           {/* Le panneau qui se colle, avec sa consigne. */}
           <div className="sticker-slap absolute -bottom-10 left-2 z-10 w-[250px] origin-bottom-left sm:w-[290px] lg:-bottom-5 lg:-left-10 lg:w-[310px]">
             <p className="mb-1.5 ml-2 inline-block rotate-2 rounded-sm bg-navy-950 px-2 py-1 text-[11px] font-bold tracking-wide text-white uppercase">
-              À coller dès maintenant chez vous
+              {locale === 'en' ? 'Display this sign on your premises' : 'À coller dès maintenant chez vous'}
             </p>
             <AedSign />
           </div>
@@ -151,11 +154,12 @@ type SlideTileProps = {
 }
 
 function SlideTile({ slide, onMissing, className }: SlideTileProps) {
+  const { t } = useLocale()
   return (
     <div className={cn('overflow-hidden rounded-lg border border-navy-100 bg-white', className)}>
       <img
         src={slide.src}
-        alt={slide.alt}
+        alt={t(slide.alt)}
         decoding="async"
         onError={() => onMissing(slide.src)}
         className={cn(

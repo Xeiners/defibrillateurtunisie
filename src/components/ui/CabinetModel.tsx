@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { usePrefersReducedMotion } from '@/animations/usePrefersReducedMotion'
 import { cabinetModel } from '@/data/site'
 import { cn } from '@/lib/cn'
+import { useLocale } from '@/i18n/LocaleProvider'
 
 /**
  * L'armoire murale en 3D.
@@ -16,6 +17,7 @@ import { cn } from '@/lib/cn'
  * `touch-action="pan-y"` laisse la page défiler au doigt sur le modèle.
  */
 export function CabinetModel({ className }: { className?: string }) {
+  const { t } = useLocale()
   const prefersReducedMotion = usePrefersReducedMotion()
   const [isViewerReady, setIsViewerReady] = useState(false)
 
@@ -48,7 +50,7 @@ export function CabinetModel({ className }: { className?: string }) {
       {isViewerReady && (
         <model-viewer
           src={cabinetModel.src}
-          alt={cabinetModel.alt}
+          alt={t(cabinetModel.alt)}
           environment-image="neutral"
           exposure="1.1"
           shadow-intensity="1"
