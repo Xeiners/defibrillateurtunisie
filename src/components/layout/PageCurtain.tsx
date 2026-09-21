@@ -9,8 +9,8 @@ import { site } from '@/data/site'
  *
  * Les deux rôles sont tenus par le MÊME élément, et c'est voulu : le visiteur
  * revoit à chaque navigation le panneau sur lequel le site s'est ouvert.
- * À l'ouverture il porte en plus le cœur qui bat et le pourcentage, qui n'ont
- * de sens que pendant un chargement.
+ * À l'ouverture il porte en plus une ligne ECG qui avance avec le chargement
+ * réel et le pourcentage correspondant.
  *
  * Il est TOUJOURS monté. Le monter au moment de s'en servir coûterait un rendu
  * React juste avant l'animation, c'est-à-dire exactement le temps mort qu'il
@@ -31,8 +31,7 @@ export function PageCurtain() {
 
   const panelRef = useRef<HTMLDivElement>(null)
   const markRef = useRef<HTMLDivElement>(null)
-  const heartRef = useRef<HTMLImageElement>(null)
-  const ruleRef = useRef<HTMLSpanElement>(null)
+  const traceRef = useRef<SVGPathElement>(null)
   const percentRef = useRef<HTMLSpanElement>(null)
 
   // `useLayoutEffect` : le volet doit être réglé avant le premier affichage,
@@ -40,12 +39,11 @@ export function PageCurtain() {
   useLayoutEffect(() => {
     const panel = panelRef.current
     const mark = markRef.current
-    const heart = heartRef.current
-    const rule = ruleRef.current
+    const trace = traceRef.current
     const percent = percentRef.current
-    if (!panel || !mark || !heart || !rule || !percent) return
+    if (!panel || !mark || !trace || !percent) return
 
-    const unregister = registerCurtain({ panel, mark, heart, rule, percent })
+    const unregister = registerCurtain({ panel, mark, trace, percent })
     playSiteIntro(!prefersReducedMotion)
     return unregister
   }, [prefersReducedMotion])
@@ -54,7 +52,6 @@ export function PageCurtain() {
     <div ref={panelRef} aria-hidden="true" className="page-curtain">
       <div ref={markRef} className="flex flex-col items-center">
         <img
-          ref={heartRef}
           src="/favicon.svg"
           alt=""
           width={72}
@@ -67,15 +64,39 @@ export function PageCurtain() {
           <span className="text-urgent-600">{site.wordmark.trail}</span>
         </span>
 
-        {/* Filet rouge qui se remplit : la seule chose qui « avance » pendant
-            le temps couvert, et le seul rappel de couleur du volet. */}
-        <span className="mt-3.5 block h-0.5 w-28 overflow-hidden rounded-full bg-navy-100">
-          <span ref={ruleRef} className="block h-full origin-left scale-x-0 rounded-full bg-urgent-600" />
-        </span>
+        {/* La trace pâle reste visible comme ligne isoélectrique. La trace
+            rouge se dessine par-dessus au rythme du chargement réel. */}
+        <svg
+          viewBox="0 0 240 48"
+          aria-hidden="true"
+          className="mt-3 h-12 w-60 max-w-[72vw] overflow-visible"
+        >
+          <path
+            d="M2 24 H50 C54 24 56 22 59 22 C62 22 64 24 68 24 H78 L84 17 L91 31 L99 4 L109 43 L118 24 H145 C150 24 151 20 156 20 C161 20 163 24 168 24 H238"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-navy-100"
+          />
+          <path
+            ref={traceRef}
+            d="M2 24 H50 C54 24 56 22 59 22 C62 22 64 24 68 24 H78 L84 17 L91 31 L99 4 L109 43 L118 24 H145 C150 24 151 20 156 20 C161 20 163 24 168 24 H238"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="1000"
+            strokeDashoffset="1000"
+            className="text-urgent-600"
+          />
+        </svg>
 
         <span
           ref={percentRef}
-          className="tabular mt-2.5 block text-[11px] font-semibold tracking-[0.08em] text-navy-400"
+          className="tabular mt-1 block text-[11px] font-semibold tracking-[0.08em] text-navy-400"
         >
           0 %
         </span>

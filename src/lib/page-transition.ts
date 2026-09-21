@@ -4,15 +4,13 @@ import { trackLoading } from './loading-progress'
 /**
  * Les pièces du volet, confiées par `<PageCurtain>` au montage.
  *
- * `panel` est le volet blanc, `mark` le bloc logo posé en son centre, `heart`
- * le cœur qui bat pendant le chargement, `rule` le filet rouge qui se remplit
- * et `percent` le chiffre sous lui.
+ * `panel` est le volet blanc, `mark` le bloc logo posé en son centre, `trace`
+ * la ligne ECG rouge qui se dessine et `percent` le chiffre sous elle.
  */
 export type CurtainParts = {
   panel: HTMLElement
   mark: HTMLElement
-  heart: HTMLElement
-  rule: HTMLElement
+  trace: SVGPathElement
   percent: HTMLElement
 }
 
@@ -112,6 +110,7 @@ function uncoverReveals() {
 
 /** Déclarée par `<PageCurtain>`. Renvoie de quoi se retirer au démontage. */
 export function registerCurtain(parts: CurtainParts) {
+  prepareTrace(parts.trace)
   curtain = parts
   return () => {
     if (curtain === parts) curtain = null
@@ -148,22 +147,20 @@ export function playSiteIntro(animate: boolean) {
     return
   }
 
-  const { panel, mark, heart, rule, percent } = curtain
+  const { panel, mark, trace, percent } = curtain
 
   gsap.set(panel, { visibility: 'visible', y: 0, yPercent: 0 })
   gsap.set(mark, { opacity: 0, scale: 0.94, y: 10 })
   gsap.set(percent, { opacity: 1 })
-  gsap.set(rule, { scaleX: 0 })
+  setTraceProgress(trace, 0)
   gsap.to(mark, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'power3.out' })
-
-  const beat = heartbeat(heart)
 
   // La valeur affichée suit la valeur réelle SANS la copier : elle la rejoint
   // en glissant. Le chargement avance par à-coups — une grosse image d'un
   // coup, puis rien —, et un filet qui saute donne l'impression d'un blocage.
   const shown = { value: 0 }
   const paint = () => {
-    gsap.set(rule, { scaleX: shown.value })
+    setTraceProgress(trace, shown.value)
     percent.textContent = `${Math.round(shown.value * 100)} %`
   }
   paint()
@@ -187,9 +184,6 @@ export function playSiteIntro(animate: boolean) {
       overwrite: true,
       onUpdate: paint,
       onComplete: () => {
-        beat.kill()
-        gsap.set(heart, { scale: 1 })
-
         gsap
           .timeline({
             onComplete: () => {
@@ -248,7 +242,8 @@ export function startPageTransition(update: () => void, animate = true) {
     return
   }
 
-  const { panel, mark, heart, rule, percent } = curtain
+  const { panel, mark, trace, percent } = curtain
+  const traceLength = prepareTrace(trace)
 
   // Un second clic pendant la traversée : on reprend du début plutôt que de
   // laisser deux volets se croiser.
@@ -268,15 +263,14 @@ export function startPageTransition(update: () => void, animate = true) {
     // que `yPercent` seul laisserait en place.
     .set(panel, { visibility: 'visible', y: 0, yPercent: 100 })
     .set(mark, { opacity: 0, scale: 0.94, y: 12 })
-    .set(heart, { scale: 1 })
     // Le chiffre n'a de sens qu'à l'ouverture : ici, rien ne se charge.
     .set(percent, { opacity: 0 })
-    .set(rule, { scaleX: 0 })
+    .set(trace, { strokeDashoffset: traceLength })
 
     // Le volet couvre.
     .to(panel, { yPercent: 0, duration: COVER, ease: 'power3.out' }, 0)
     .to(mark, { opacity: 1, scale: 1, y: 0, duration: 0.28, ease: 'power3.out' }, 0.16)
-    .to(rule, { scaleX: 1, duration: 0.42, ease: 'power2.inOut' }, 0.18)
+    .to(trace, { strokeDashoffset: 0, duration: 0.42, ease: 'power2.inOut' }, 0.18)
 
     // À couvert : la page change.
     .call(
@@ -293,19 +287,25 @@ export function startPageTransition(update: () => void, animate = true) {
     .to(panel, { yPercent: -100, duration: LIFT, ease: 'power2.inOut' }, LIFT_AT)
 }
 
+/** Dessine la trace de gauche à droite sans recalculer sa géométrie. */
+function setTraceProgress(trace: SVGPathElement, ratio: number) {
+  const length = prepareTrace(trace)
+  const progress = Math.min(1, Math.max(0, ratio))
+  gsap.set(trace, { strokeDashoffset: length * (1 - progress) })
+}
+
 /**
- * Le cœur du logo, qui bat.
- *
- * Deux temps inégaux puis une pause : c'est le rythme d'un vrai battement, et
- * c'est ce qui le distingue d'une pastille qui clignote. Sur un site de
- * défibrillateurs, l'attente se mesure en battements.
+ * Les longueurs SVG normalisées ne sont pas animées de façon identique selon
+ * les navigateurs. On mesure donc la trace une fois et on travaille en pixels.
  */
-function heartbeat(heart: HTMLElement) {
-  return gsap
-    .timeline({ repeat: -1, defaults: { transformOrigin: '50% 55%' } })
-    .to(heart, { scale: 1.12, duration: 0.14, ease: 'power2.out' })
-    .to(heart, { scale: 1, duration: 0.2, ease: 'power2.in' })
-    .to(heart, { scale: 1.07, duration: 0.12, ease: 'power2.out' })
-    .to(heart, { scale: 1, duration: 0.24, ease: 'power2.in' })
-    .to(heart, { duration: 0.5 })
+function prepareTrace(trace: SVGPathElement) {
+  const cached = Number(trace.dataset.traceLength)
+  const length = cached > 0 ? cached : trace.getTotalLength()
+
+  if (!(cached > 0)) {
+    trace.dataset.traceLength = String(length)
+    gsap.set(trace, { strokeDasharray: length, strokeDashoffset: length })
+  }
+
+  return length
 }
