@@ -56,9 +56,18 @@ export function Hero() {
             data-anim="words"
             className="mt-3 text-[clamp(1.875rem,3.4vw,2.75rem)] leading-[1.1] font-bold tracking-tight text-navy-950"
           >
-            <SplitWords text={locale === 'en' ? 'Rent your defibrillator' : 'Votre défibrillateur en'} />{' '}
-            <SplitWords text={locale === 'en' ? 'from' : 'location,'} className="text-urgent-600" />{' '}
-            <SplitWords text={locale === 'en' ? `${HEADLINE_PRICE} ${CURRENCY} per month.` : `dès ${HEADLINE_PRICE} ${CURRENCY} par mois.`} />
+            {locale === 'en' ? (
+              <>
+                <SplitWords text="Rent" className="text-urgent-600" />{' '}
+                <SplitWords text={`your defibrillator from ${HEADLINE_PRICE} ${CURRENCY} per month.`} />
+              </>
+            ) : (
+              <>
+                <SplitWords text="Votre défibrillateur en" />{' '}
+                <SplitWords text="location," className="text-urgent-600" />{' '}
+                <SplitWords text={`dès ${HEADLINE_PRICE} ${CURRENCY} par mois.`} />
+              </>
+            )}
           </h1>
 
           <p data-anim="up" data-delay="0.25" className="mt-4 max-w-md text-[15px] leading-relaxed text-navy-500">
