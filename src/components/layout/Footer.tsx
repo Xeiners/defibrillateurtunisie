@@ -157,7 +157,7 @@ export function Footer() {
               {studio.url === '' ? (
                 <span className="text-white">{studio.name}</span>
               ) : (
-                <a href={studio.url} target="_blank" rel="noreferrer noopener" className="text-white hover:underline">
+                <a href={studio.url} {...(!studio.url.startsWith('mailto:') ? { target: '_blank', rel: 'noreferrer noopener' } : {})} className="text-white hover:underline">
                   {studio.name}
                 </a>
               )}

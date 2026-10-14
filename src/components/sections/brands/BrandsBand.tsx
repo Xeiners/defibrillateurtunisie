@@ -36,7 +36,7 @@ export function BrandsBand() {
   })
 
   return (
-    <section aria-labelledby="confiance-titre" className="bg-white pt-1">
+    <section aria-labelledby="confiance-titre" className="bg-white pt-6 sm:pt-8 overflow-x-clip">
       <div className="mx-auto flex max-w-3xl items-center gap-4 px-4 sm:px-6">
         <span aria-hidden="true" className="h-px flex-1 bg-linear-to-r from-transparent to-navy-200" />
         <h2
@@ -51,7 +51,7 @@ export function BrandsBand() {
 
       <div
         ref={viewportRef}
-        className={cn('mt-6', !prefersReducedMotion && 'overflow-hidden')}
+        className={cn('mt-3 sm:mt-4', !prefersReducedMotion && 'overflow-hidden')}
         style={
           prefersReducedMotion
             ? undefined
@@ -79,7 +79,7 @@ export function BrandsBand() {
                   src={brand.logo}
                   alt={brand.name}
                   decoding="async"
-                  className="max-h-14 w-auto max-w-full object-contain opacity-75 grayscale transition-[opacity,filter] duration-300 hover:opacity-100 hover:grayscale-0"
+                  className="max-h-14 w-auto max-w-full object-contain transition-transform duration-300 hover:scale-105"
                 />
               </li>
             )),

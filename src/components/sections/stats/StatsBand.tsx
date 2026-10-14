@@ -40,7 +40,7 @@ export function StatsBand() {
   const otherStats = stats.filter((stat) => stat.id !== 'minute' && stat.id !== 'survie')
 
   return (
-    <section aria-labelledby="chiffres-titre" className="on-dark bg-navy-950 py-14 sm:py-20">
+    <section aria-labelledby="chiffres-titre" className="on-dark bg-navy-950 py-14 sm:py-20 overflow-x-clip">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[5fr_7fr] lg:items-end lg:gap-16">
         <div>
           <p data-anim="left" className="flex items-center gap-3 text-[12px] font-semibold tracking-[0.12em] text-navy-300 uppercase">
@@ -113,7 +113,7 @@ function SurvivalChart() {
         </li>
         <li className="flex items-center gap-2 text-[13px] text-navy-400">
           <Skull size={18} weight="fill" aria-hidden="true" />
-          {locale === 'en' ? 'After 8 min: almost no chance' : 'Après 8 min : quasi aucune chance'}
+          {locale === 'en' ? 'After 10 min: almost no chance' : 'Après 10 min : quasi aucune chance'}
         </li>
       </ul>
 
@@ -124,7 +124,7 @@ function SurvivalChart() {
           <span className="absolute -top-2 right-0 bg-navy-950 pl-2 text-[11px] text-navy-400">50 %</span>
         </div>
 
-        <ul data-anim="grow" className="flex h-full list-none items-end gap-1.5 sm:gap-2">
+        <ul data-anim="grow" className="flex h-full list-none items-end gap-1 sm:gap-2">
           {survivalByMinute.map((point, index) => {
             const isFirst = index === 0
             const isLast = index === survivalByMinute.length - 1
@@ -185,7 +185,7 @@ function SurvivalChart() {
 
       {/* Axe des minutes, sous les barres. */}
       <div className="mt-2 border-t border-white/10 pt-2">
-        <ul className="flex list-none gap-1.5 sm:gap-2">
+        <ul className="flex list-none gap-1 sm:gap-2">
           {survivalByMinute.map((point) => (
             <li key={point.minute} className="tabular flex-1 text-center text-[11px] text-navy-400 sm:text-[12px]">
               {point.minute}

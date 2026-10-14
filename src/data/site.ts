@@ -29,7 +29,7 @@ export type Studio = {
 
 export const studio: Studio = {
   name: 'KomoDev',
-  url: '',
+  url: 'mailto:komo.devpro@gmail.com',
 }
 
 export type Contact = {

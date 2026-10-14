@@ -19,8 +19,8 @@ export type Brand = {
  * l'inscrire ici.
  */
 export const brands: Brand[] = [
-  { id: 'carrefour', name: 'Carrefour', logo: '/marques/carrefour.png' },
   { id: 'steg', name: 'STEG', logo: '/marques/steg1.png' },
+  { id: 'carrefour', name: 'Carrefour', logo: '/marques/carrefour.png' },
   { id: 'amen-bank', name: 'Amen Bank', logo: '/marques/amen_bank.png' },
   { id: 'banque-de-tunisie', name: 'Banque de Tunisie', logo: '/marques/banque_de_tunisie.png' },
   { id: 'uib', name: 'UIB', logo: '/marques/uib.png' },

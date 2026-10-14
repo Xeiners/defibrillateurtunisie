@@ -66,9 +66,9 @@ export const riskFactors: RiskFactor[] = [
     why: 'Plus il y a de passage, plus un arrêt cardiaque sur place devient probable.',
   },
   {
-    id: 'fragile',
-    label: 'Votre public est âgé ou fragile',
-    why: 'Le risque cardiaque augmente fortement avec l’âge et les maladies chroniques.',
+    id: 'affluence',
+    label: 'Beaucoup de personnes présentes sur place',
+    why: 'Plus il y a de monde réuni sur place, plus le risque d’un arrêt cardiaque augmente.',
   },
   {
     id: 'effort',
@@ -158,6 +158,8 @@ export const survivalByMinute = [
   { minute: 6, survival: 20 },
   { minute: 7, survival: 10 },
   { minute: 8, survival: 5 },
+  { minute: 9, survival: 3 },
+  { minute: 10, survival: 1 },
 ]
 
 export type RescueStep = {
