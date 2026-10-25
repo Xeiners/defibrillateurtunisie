@@ -1,12 +1,27 @@
 import { useState, type ComponentType } from 'react'
 import {
   ArrowRight,
+  ArrowsClockwise,
+  Baby,
+  Buildings,
+  CalendarCheck,
+  FileText,
+  Heartbeat,
+  Lifebuoy,
+  Lightning,
+  MapPinArea,
   Package,
   MapTrifold,
   Plus,
+  Receipt,
   Scales,
+  ShieldCheck,
+  ShoppingCart,
   Timer,
+  Translate,
+  UsersThree,
   Wallet,
+  Wrench,
   GraduationCap,
   type IconProps,
 } from '@phosphor-icons/react'
@@ -14,6 +29,7 @@ import { RichText } from '@/components/ui/RichText'
 import { SectionTitle } from '@/components/ui/SectionTitle'
 import { faqEntries, type FaqEntry } from '@/data/faq'
 import { actions } from '@/data/site'
+import { ROUTES } from '@/router/route-context'
 import { cn } from '@/lib/cn'
 import { useLocale } from '@/i18n/LocaleProvider'
 
@@ -24,6 +40,21 @@ const FAQ_ICONS: Record<string, ComponentType<IconProps>> = {
   box: Package,
   map: MapTrifold,
   timer: Timer,
+  calendar: CalendarCheck,
+  renew: ArrowsClockwise,
+  cart: ShoppingCart,
+  lightning: Lightning,
+  shield: ShieldCheck,
+  baby: Baby,
+  languages: Translate,
+  pin: MapPinArea,
+  wrench: Wrench,
+  lifebuoy: Lifebuoy,
+  heartbeat: Heartbeat,
+  team: UsersThree,
+  file: FileText,
+  receipt: Receipt,
+  buildings: Buildings,
 }
 
 /**
@@ -46,14 +77,22 @@ export function FaqSection() {
             title={locale === 'en' ? 'Everything you need to know' : 'Tout ce qu’il faut savoir'}
             accent={locale === 'en' ? 'before getting equipped.' : 'avant de vous équiper.'}
           />
-          <a
-            data-anim="up"
-            href={actions.quote.href}
-            className="group mt-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-urgent-600"
-          >
-            {locale === 'en' ? 'Another question? Contact us' : 'Une autre question ? Écrivez-nous'}
-            <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
-          </a>
+          <div data-anim="up" className="mt-5 flex flex-col items-start gap-2.5">
+            <a
+              href={ROUTES.faq}
+              className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-navy-900 transition-colors hover:text-urgent-700"
+            >
+              {locale === 'en' ? 'See all questions' : 'Voir toutes les questions'}
+              <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </a>
+            <a
+              href={actions.quote.href}
+              className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-urgent-600"
+            >
+              {locale === 'en' ? 'Another question? Contact us' : 'Une autre question ? Écrivez-nous'}
+              <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </a>
+          </div>
         </div>
 
         <div data-anim="stagger" className="border-t border-navy-200">
@@ -75,17 +114,24 @@ type FaqItemProps = {
   entry: FaqEntry
   isOpen: boolean
   onToggle: () => void
+  size?: 'md' | 'lg'
 }
 
-/** Hauteur animée par `grid-template-rows: 0fr -> 1fr` : la course suit le contenu. */
-function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
+/**
+ * Hauteur animée par `grid-template-rows: 0fr -> 1fr` : la course suit le contenu.
+ *
+ * Partagé avec la page `/faq`, qui le prend en `lg` : textes plus grands, et
+ * pastille d'icône grisée puisqu'il y est posé sur une carte blanche.
+ */
+export function FaqItem({ entry, isOpen, onToggle, size = 'md' }: FaqItemProps) {
   const { t } = useLocale()
   const buttonId = `question-${entry.id}`
   const panelId = `reponse-${entry.id}`
   const Icon = FAQ_ICONS[entry.icon]
+  const isLarge = size === 'lg'
 
   return (
-    <div className="border-b border-navy-200">
+    <div className={cn('border-b', isLarge ? 'border-navy-100 last:border-b-0' : 'border-navy-200')}>
       <h3>
         <button
           type="button"
@@ -93,19 +139,27 @@ function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
           onClick={onToggle}
           aria-expanded={isOpen}
           aria-controls={panelId}
-          className="group flex w-full cursor-pointer items-center gap-3.5 py-4 text-left"
+          className={cn('group flex w-full cursor-pointer items-center text-left', isLarge ? 'gap-4 py-5' : 'gap-3.5 py-4')}
         >
           <span
             aria-hidden="true"
             className={cn(
-              'grid size-9 shrink-0 place-items-center rounded-md transition-colors duration-300',
-              isOpen ? 'bg-urgent-600 text-white' : 'bg-white text-navy-500 group-hover:text-urgent-600',
+              'grid shrink-0 place-items-center rounded-md transition-colors duration-300',
+              isLarge ? 'size-10' : 'size-9',
+              isOpen
+                ? 'bg-urgent-600 text-white'
+                : cn(isLarge ? 'bg-navy-50' : 'bg-white', 'text-navy-500 group-hover:text-urgent-600'),
             )}
           >
-            <Icon size={18} weight={isOpen ? 'fill' : 'regular'} />
+            <Icon size={isLarge ? 20 : 18} weight={isOpen ? 'fill' : 'regular'} />
           </span>
 
-          <span className="flex-1 text-[15px] leading-snug font-semibold text-navy-950 transition-colors group-hover:text-urgent-700 sm:text-[16px]">
+          <span
+            className={cn(
+              'flex-1 leading-snug font-semibold text-navy-950 transition-colors group-hover:text-urgent-700',
+              isLarge ? 'text-[16px] sm:text-[18px]' : 'text-[15px] sm:text-[16px]',
+            )}
+          >
             {t(entry.question)}
           </span>
 
@@ -127,7 +181,13 @@ function FaqItem({ entry, isOpen, onToggle }: FaqItemProps) {
         className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-350 ease-smooth data-[open=true]:grid-rows-[1fr]"
       >
         <div className="overflow-hidden">
-          <p inert={!isOpen} className="max-w-2xl pb-5 pl-12.5 text-[14px] leading-relaxed text-navy-600 sm:text-[15px]">
+          <p
+            inert={!isOpen}
+            className={cn(
+              'max-w-2xl leading-relaxed text-navy-600',
+              isLarge ? 'pb-6 pl-14 text-[15px] sm:text-[16.5px]' : 'pb-5 pl-12.5 text-[14px] sm:text-[15px]',
+            )}
+          >
             <RichText text={t(entry.answer)} />
           </p>
         </div>

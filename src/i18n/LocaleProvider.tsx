@@ -101,6 +101,54 @@ const en: Record<string, string> = {
   '==Oui, dans tout le pays.== Du Grand Tunis au Sud, pour **un site unique comme pour un réseau** d’établissements.': '==Yes, nationwide.== From Greater Tunis to the south, for **a single site or a network** of locations.',
   'Combien de défibrillateurs prévoir ?': 'How many defibrillators do you need?',
   'Un appareil doit pouvoir être atteint et ramené en ==moins de 3 minutes==. Pour un grand site ou plusieurs bâtiments, nous établissons **gratuitement un plan d’implantation**.': 'A device must be reachable and brought back in ==under 3 minutes==. For a large site or several buildings, we provide **a free placement plan**.',
+  // Page FAQ : thèmes.
+  'La location': 'Rental',
+  'Ce que vous payez, ce que vous recevez, et pour combien de temps.': 'What you pay, what you get, and for how long.',
+  'L’appareil et son utilisation': 'The device and how to use it',
+  'Un défibrillateur est conçu pour être utilisé par n’importe quel témoin.': 'A defibrillator is designed to be used by any bystander.',
+  'Installation et entretien': 'Installation and maintenance',
+  'Nous posons l’appareil, nous l’entretenons, vous n’avez rien à suivre.': 'We install the device and maintain it; you have nothing to keep track of.',
+  'Formation': 'Training',
+  'Savoir quoi faire dans les premières minutes change tout.': 'Knowing what to do in the first few minutes changes everything.',
+  'Réglementation': 'Regulations',
+  'Où en est la loi, et pourquoi ne pas l’attendre.': 'Where the law stands, and why not to wait for it.',
+  'Devis et tarifs': 'Quotes and pricing',
+  'Un devis gratuit, adapté à votre site, sous 24 h ouvrées.': 'A free quote, tailored to your site, within one business day.',
+  // Page FAQ : questions.
+  'Quelle est la durée d’engagement ?': 'How long is the commitment?',
+  'Trois durées au choix : ==24, 36 ou 48 mois==. **Plus l’engagement est long, plus le loyer mensuel baisse**, à prestations identiques.': 'Three terms to choose from: ==24, 36 or 48 months==. **The longer the commitment, the lower the monthly fee**, for exactly the same service.',
+  'Que se passe-t-il en fin de contrat ?': 'What happens at the end of the contract?',
+  'Vous choisissez : **renouveler la location**, avec un appareil récent si vous le souhaitez, ou ==nous le restituer, sans frais==. Nous venons le récupérer sur place.': 'You choose: **renew the rental**, with a newer device if you wish, or ==return it to us at no cost==. We collect it on site.',
+  'Et si je préfère acheter l’appareil ?': 'What if I would rather buy the device?',
+  'C’est possible : l’achat se fait sur **la boutique de notre groupe**, ==Cardiolife.tn==. La location reste la formule la plus simple, puisque l’entretien y est compris.': 'You can: purchases are made through **our group’s store**, ==Cardiolife.tn==. Renting remains the simplest option, since maintenance is included.',
+  'Semi-automatique ou entièrement automatique : quelle différence ?': 'Semi-automatic or fully automatic: what is the difference?',
+  'Les deux **analysent le cœur et guident à la voix**. Le semi-automatique ==demande d’appuyer sur un bouton== pour délivrer le choc ; l’entièrement automatique ==le délivre seul==, après un compte à rebours. Les packs Essentiel et Confort sont semi-automatiques, le pack Premium est entièrement automatique.': 'Both **analyse the heart and give voice guidance**. A semi-automatic device ==asks you to press a button== to deliver the shock; a fully automatic one ==delivers it on its own==, after a countdown. The Essential and Comfort packages are semi-automatic; the Premium package is fully automatic.',
+  'Peut-on blesser quelqu’un par erreur ?': 'Can you hurt someone by mistake?',
+  '==Non.== L’appareil **ne délivre aucun choc** si le rythme cardiaque ne le justifie pas. Face à un arrêt cardiaque, le seul vrai risque est de ne rien faire.': '==No.== The device **will not deliver a shock** unless the heart rhythm requires one. In a cardiac arrest, the only real risk is doing nothing.',
+  'Fonctionne-t-il sur un enfant ?': 'Does it work on a child?',
+  'Oui, avec des **électrodes pédiatriques** qui adaptent l’énergie du choc. ==Signalez-le dans votre demande de devis== si votre site accueille des enfants : école, crèche, centre de loisirs.': 'Yes, with **paediatric pads** that adjust the shock energy. ==Mention it in your quote request== if your site welcomes children: schools, nurseries, leisure centres.',
+  'En quelle langue l’appareil guide-t-il ?': 'Which language does the device use?',
+  'Tous nos appareils guident **en français**. Les packs Confort et Premium proposent aussi ==l’arabe et l’anglais==, utiles pour un public international.': 'All our devices give guidance **in French**. The Comfort and Premium packages also offer ==Arabic and English==, useful for international visitors.',
+  'Où installer le défibrillateur ?': 'Where should the defibrillator be installed?',
+  'À un endroit **visible, accessible à tous et sans clé** : hall d’accueil, couloir principal, près des ascenseurs. Nous choisissons l’emplacement ==avec vous, lors de l’installation==.': 'Somewhere **visible, accessible to everyone and never locked**: reception area, main corridor, near the lifts. We choose the location ==with you, during installation==.',
+  'Qui s’occupe de l’entretien ?': 'Who takes care of maintenance?',
+  '==Nous, entièrement.== **Contrôles réguliers**, remplacement des électrodes et de la batterie avant leur date d’expiration : l’appareil est toujours prêt, sans que vous ayez à y penser.': '==We do, entirely.== **Regular checks**, and pads and battery replaced before they expire: the device is always ready, without you having to think about it.',
+  'Et si l’appareil tombe en panne ?': 'What if the device breaks down?',
+  'Il est ==remplacé sous 72 h==, sans frais. L’appareil réalise aussi **des autotests réguliers** et signale lui-même toute anomalie.': 'It is ==replaced within 72 hours==, at no cost. The device also runs **regular self-tests** and reports any fault itself.',
+  'Que faire après avoir utilisé le défibrillateur ?': 'What should I do after the defibrillator has been used?',
+  '**Prévenez-nous.** Nous remplaçons ==les électrodes et, si besoin, la batterie== pour que l’appareil soit de nouveau opérationnel. Ce remplacement est compris dans la location.': '**Let us know.** We replace ==the pads and, if needed, the battery== so the device is ready again. This replacement is included in the rental.',
+  'La formation est-elle incluse ?': 'Is training included?',
+  '==Oui, dans chaque pack.== Une session sur site pour **reconnaître un arrêt cardiaque, masser et utiliser le défibrillateur**, pour 10, 15 ou 25 personnes selon le pack.': '==Yes, in every package.== An on-site session to **recognise a cardiac arrest, perform CPR and use the defibrillator**, for 10, 15 or 25 people depending on the package.',
+  'Qui faut-il former ?': 'Who should be trained?',
+  'Idéalement **plusieurs personnes par équipe et par horaire**, pour qu’il y ait toujours quelqu’un de formé sur place. Mais ==n’importe quel témoin peut utiliser l’appareil==, même sans formation.': 'Ideally **several people per team and per shift**, so that someone trained is always on site. But ==any bystander can use the device==, even without training.',
+  'Pourquoi s’équiper sans attendre la loi ?': 'Why get equipped without waiting for the law?',
+  'Parce qu’un arrêt cardiaque n’attend pas : ==chaque minute sans choc fait perdre environ 10 % de chances de survie==. **Les secours mettent souvent plus de temps à arriver** ; un défibrillateur sur place comble ce délai.': 'Because cardiac arrest does not wait: ==every minute without a shock costs about 10% of the chance of survival==. **Emergency services often take longer to arrive**; a defibrillator on site bridges that gap.',
+  'Le devis est-il gratuit et sans engagement ?': 'Is the quote free and without obligation?',
+  '==Oui, gratuit et sans engagement.== Vous recevez **un devis détaillé sous 24 h ouvrées**, adapté à la surface et à la configuration de votre site.': '==Yes, free and without obligation.== You receive **a detailed quote within one business day**, tailored to the size and layout of your site.',
+  'Les prix affichés sont-ils HT ?': 'Are the prices shown excluding tax?',
+  'Oui : les loyers sont indiqués ==hors taxes, par mois et par appareil==. Le devis détaille **le montant TTC** et le total pour l’ensemble de vos appareils.': 'Yes: rental fees are shown ==excluding tax, per month and per device==. The quote details **the amount including tax** and the total for all your devices.',
+  'Puis-je équiper plusieurs sites ?': 'Can I equip several sites?',
+  'Oui. ==Un seul devis et un seul contrat== pour l’ensemble de vos établissements, avec **un plan d’implantation pour chacun**.': 'Yes. ==One quote and one contract== for all your sites, with **a placement plan for each**.',
 }
 
 function initialLocale(): Locale {
@@ -126,8 +174,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     }
     document.documentElement.lang = locale
     document.title = locale === 'en'
-      ? 'Defibrillateur.TN · Defibrillator rental in Tunisia from 100 DT/month'
-      : 'Defibrillateur.TN · Location de défibrillateurs en Tunisie dès 100 DT/mois'
+      ? 'Defibrillateur.TN · Defibrillator rental in Tunisia from 140 DT/month'
+      : 'Defibrillateur.TN · Location de défibrillateurs en Tunisie dès 140 DT/mois'
 
     const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')
     if (description) {

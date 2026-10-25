@@ -10,9 +10,10 @@ import { PageCurtain } from '@/components/layout/PageCurtain'
 import { LawNotice } from '@/components/sections/law/LawNotice'
 import { HomePage } from '@/pages/HomePage'
 import { QuotePage } from '@/pages/QuotePage'
+import { FaqPage } from '@/pages/FaqPage'
 
 /**
- * Deux pages : l'accueil, et le devis.
+ * Trois pages : l'accueil, le devis et la FAQ.
  *
  * `RouterProvider` est au-dessus de tout — il intercepte les liens internes.
  * `QuoteProvider` juste en dessous : la sélection de packs se constitue sur
@@ -32,7 +33,7 @@ export default function App() {
 }
 
 /**
- * Cadre commun aux deux pages.
+ * Cadre commun aux trois pages.
  *
  * `useScrollEffects` est monté ICI, au-dessus du contenu : les animations des
  * sections existent déjà quand il calcule ses déclencheurs. Il reçoit le chemin
@@ -49,7 +50,7 @@ function Shell() {
   return (
     <div ref={rootRef}>
       <Navbar />
-      <main>{isQuotePage ? <QuotePage /> : <HomePage />}</main>
+      <main>{isQuotePage ? <QuotePage /> : path === ROUTES.faq ? <FaqPage /> : <HomePage />}</main>
       <Footer />
 
       {/* Hors flux : la notification suit le visiteur en bas d'écran. Elle est

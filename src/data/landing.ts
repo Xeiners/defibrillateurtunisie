@@ -18,11 +18,9 @@ export type HeroSlide = {
  * Un fichier absent retire sa case d'elle-même.
  */
 export const heroSlides: HeroSlide[] = [
-  { src: '/header/pack-schiller.webp', alt: 'Pack défibrillateur Schiller : armoire, signalétique, électrodes et trousse de secours', fit: 'contain' },
+  { src: '/header/image2.jpg', alt: 'Armoire murale et défibrillateur ZOLL installés sur site', fit: 'cover' },
   { src: '/header/pack-zoll.webp', alt: 'Pack ZOLL : défibrillateur, armoire murale, électrodes, trousse et signalétique', fit: 'contain' },
-  { src: '/header/pack-formation-pose.webp', alt: 'Armoire, défibrillateur, signalétique et technicien qui installe l’appareil', fit: 'contain' },
   { src: '/header/pack-cardiac-science.webp', alt: 'Pack Cardiac Science : défibrillateur, armoire, sacoche et signalétique', fit: 'contain' },
-  { src: '/header/trousse-secours.webp', alt: 'Trousse de secours : ciseaux, gants, rasoir et compresses', fit: 'contain' },
 ]
 
 export type Sector = {

@@ -4,6 +4,7 @@ import { createContext, useContext } from 'react'
 export const ROUTES = {
   home: '/',
   quote: '/devis',
+  faq: '/faq',
 } as const
 
 export type RouteValue = {

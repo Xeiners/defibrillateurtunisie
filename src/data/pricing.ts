@@ -86,9 +86,9 @@ export const packs: Pack[] = [
     deviceType: 'Semi-automatique',
     summary: 'Un appareil simple, prêt à l’emploi.',
     terms: [
-      { months: 24, monthly: 115 },
-      { months: 36, monthly: 100 },
-      { months: 48, monthly: 89 },
+      { months: 24, monthly: 180 },
+      { months: 36, monthly: 160 },
+      { months: 48, monthly: 140 },
     ],
     images: ['/packs/essentiel.webp', '/packs/essentiel.jpg', '/packs/essentiel.png'],
     features: [
@@ -106,9 +106,9 @@ export const packs: Pack[] = [
     deviceType: 'Semi-automatique',
     summary: 'Il corrige le massage cardiaque.',
     terms: [
-      { months: 24, monthly: 150 },
-      { months: 36, monthly: 135 },
-      { months: 48, monthly: 120 },
+      { months: 24, monthly: 235 },
+      { months: 36, monthly: 210 },
+      { months: 48, monthly: 190 },
     ],
     isPopular: true,
     images: ['/packs/confort.webp', '/packs/confort.jpg', '/packs/confort.png'],
@@ -127,9 +127,9 @@ export const packs: Pack[] = [
     deviceType: 'Entièrement automatique',
     summary: 'L\'appareil fait tout.',
     terms: [
-      { months: 24, monthly: 195 },
-      { months: 36, monthly: 175 },
-      { months: 48, monthly: 155 },
+      { months: 24, monthly: 305 },
+      { months: 36, monthly: 275 },
+      { months: 48, monthly: 245 },
     ],
     images: ['/packs/premium.webp', '/packs/premium.jpg', '/packs/premium.png'],
     features: [

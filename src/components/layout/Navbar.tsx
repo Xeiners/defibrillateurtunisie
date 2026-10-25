@@ -90,7 +90,11 @@ export function Navbar() {
               <li key={item.id}>
                 <a
                   href={item.href}
-                  className="rounded-md px-3.5 py-2 text-[14px] font-medium text-navy-600 transition-colors duration-200 hover:bg-navy-50 hover:text-navy-950"
+                  aria-current={path === item.href ? 'page' : undefined}
+                  className={cn(
+                    'rounded-md px-3.5 py-2 text-[14px] font-medium transition-colors duration-200 hover:bg-navy-50 hover:text-navy-950',
+                    path === item.href ? 'text-urgent-600' : 'text-navy-600',
+                  )}
                 >
                   {t(item.label)}
                 </a>
