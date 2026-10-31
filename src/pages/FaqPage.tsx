@@ -63,7 +63,7 @@ export function FaqPage() {
         leurs cartes blanches, qui portent la page.
       */}
       <div className="mx-auto mt-8 grid max-w-7xl gap-8 px-4 sm:px-6 lg:mt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.6fr)] lg:gap-10">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
           <nav aria-label={locale === 'en' ? 'Topics' : 'Thèmes'}>
             <p
               data-anim="left"

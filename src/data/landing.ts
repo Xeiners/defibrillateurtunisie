@@ -7,20 +7,69 @@
  */
 
 export type HeroSlide = {
+  id: string
   src: string
   alt: string
-  /** `contain` pour les visuels produit sur fond blanc, `cover` pour les photos. */
-  fit: 'contain' | 'cover'
+  /** Ce que la photo illustre, en titre sur l'image. */
+  title: string
+  /** Une ligne sous le titre. */
+  caption: string
+  /** Où mène un clic sur la photo, et l'invitation qui le dit. */
+  link: { label: string; href: string }
+  /**
+   * Point de la photo à garder dans le cadre (`object-position`). Le cadre est
+   * plus large que haut : sans lui, une photo en portrait perdrait son sujet.
+   */
+  focus: string
 }
 
 /**
- * Visuels qui défilent dans le hero : uniquement ceux de `public/header/`.
- * Un fichier absent retire sa case d'elle-même.
+ * Photos qui défilent dans la moitié droite du hero, en plein cadre : une par
+ * service inclus dans la location, chacune menant à la partie du site qui en
+ * parle.
+ *
+ * Que des PHOTOS : les visuels « pack », couverts de texte, ne supportent pas
+ * d'être recadrés. La première est la plus légère, c'est celle qui s'affiche
+ * au chargement.
  */
 export const heroSlides: HeroSlide[] = [
-  { src: '/header/image2.jpg', alt: 'Armoire murale et défibrillateur ZOLL installés sur site', fit: 'cover' },
-  { src: '/header/pack-zoll.webp', alt: 'Pack ZOLL : défibrillateur, armoire murale, électrodes, trousse et signalétique', fit: 'contain' },
-  { src: '/header/pack-cardiac-science.webp', alt: 'Pack Cardiac Science : défibrillateur, armoire, sacoche et signalétique', fit: 'contain' },
+  {
+    id: 'armoire',
+    src: '/header/image2.jpg',
+    alt: 'Armoire murale ZOLL avec son défibrillateur et sa signalétique, posée sur un mur',
+    title: 'Armoire murale',
+    caption: 'Le défibrillateur protégé, visible et signalé.',
+    link: { label: 'Voir les packs', href: '/#offres' },
+    focus: '50% 62%',
+  },
+  {
+    id: 'installation',
+    src: '/caroussel/armoire-chalet.jpg',
+    alt: 'Armoire murale avec défibrillateur fixée sur la façade en bois d’un refuge',
+    title: 'Installation',
+    caption: 'Posé chez vous par nos techniciens, au bon endroit.',
+    link: { label: 'Demander une pose', href: '/devis' },
+    // L'armoire est à gauche de la photo : on la cale au bord gauche du cadre.
+    focus: '0% 50%',
+  },
+  {
+    id: 'maintenance',
+    src: '/bentoMain/image2.png',
+    alt: 'Deux défibrillateurs ZOLL au bord d’un terrain de football',
+    title: 'Maintenance',
+    caption: 'Électrodes, batterie, contrôles : toujours prêt.',
+    link: { label: 'Comment on l’entretient', href: '/faq#installation' },
+    focus: '55% 85%',
+  },
+  {
+    id: 'formation',
+    src: '/caroussel/image1.png',
+    alt: 'Un collègue pratique un massage cardiaque dans un entrepôt, un défibrillateur posé à côté',
+    title: 'Formation',
+    caption: 'Vos équipes formées aux gestes qui sauvent.',
+    link: { label: 'Les gestes qui sauvent', href: '/#sauver-une-vie' },
+    focus: '45% 60%',
+  },
 ]
 
 export type Sector = {
@@ -43,7 +92,7 @@ export const sectors: Sector[] = [
   { id: 'entreprises', label: 'Entreprises', hint: 'Salariés' },
   { id: 'commerces', label: 'Commerces', hint: 'Forte affluence' },
   { id: 'sante', label: 'Cliniques', hint: 'Patients fragiles' },
-  { id: 'public', label: 'Mairies', hint: 'Accueil du public' },
+  { id: 'usine', label: 'Usines', hint: 'Travail physique' },
 ]
 
 export type RiskFactor = {
@@ -94,6 +143,15 @@ export const lawNews = {
     label: 'La Presse de Tunisie',
     href: 'https://www.lapresse.tn/2026/07/04/arrets-cardiaques-vers-linstallation-de-defibrillateurs-automatises-dans-les-lieux-publics-en-tunisie/',
   },
+} as const
+
+/**
+ * Publication de sensibilisation du ministère de la Santé, deuxième actualité
+ * de la bande du bas. Elle s'ouvre sur Facebook, dans un nouvel onglet.
+ */
+export const healthPost = {
+  source: 'Ministère de la Santé',
+  href: 'https://www.facebook.com/santetunisie.rns.tn/posts/pfbid02DnXQd1VuxLVBgfyRf2Xu6Wfdn8RjvDwpDELaKqKCmZYY4VBmFpk6USGazGCXhj9Ll',
 } as const
 
 export type Stat = {

@@ -2,27 +2,36 @@ import { Check } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/Button'
 import { SplitWords } from '@/components/ui/SplitWords'
 import { TunisiaFlag } from '@/components/ui/TunisiaFlag'
-import { StackedHeroCards } from './StackedHeroCards'
+import { HeroCarousel } from './HeroCarousel'
 import { CURRENCY, HEADLINE_PRICE } from '@/data/pricing'
 import { actions } from '@/data/site'
 import { useLocale } from '@/i18n/LocaleProvider'
 
 const HIGHLIGHTS = ['Installation et maintenance', 'Partout en Tunisie']
 
+/** La formation est l'inclus qui surprend le plus : elle ressort du chapeau. */
+const TRAINING_CLASS =
+  'font-bold text-navy-800 underline decoration-urgent-500 decoration-2 underline-offset-3'
+
 /**
  * Hero.
  *
  * À gauche, le discours et les actions de conversion.
- * À droite, composition 3D de cartes superposées avec changement automatique
- * et panneau DAE « Ce site est équipé d'un défibrillateur » toujours présent au premier plan.
+ * À droite, un carrousel de photos qui occupe toute la moitié de l'écran, avec
+ * le panneau DAE « Ce site est équipé d'un défibrillateur » au premier plan.
  */
 export function Hero() {
   const { locale, t } = useLocale()
 
   return (
     <section id="top" className="overflow-x-clip bg-white">
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 pt-4 pb-4 sm:px-6 sm:pt-6 sm:pb-6 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-10 lg:pt-4 lg:pb-4">
-        <div className="min-w-0">
+      {/* Pas de marge haute ni basse : la photo touche la barre de navigation
+          et la section suivante. Seul le texte a son propre souffle.
+          Pleine largeur en grand écran : le texte part près du bord gauche au
+          lieu de rester dans les 1280 px du site, et la photo va jusqu’au bord
+          droit. Au-delà de 1600 px, le texte se recentre doucement. */}
+      <div className="grid gap-2 px-4 sm:px-6 lg:grid-cols-[45fr_55fr] lg:gap-10 lg:pr-0 lg:pl-[max(3rem,calc((100vw_-_100rem)/2))]">
+        <div className="relative z-10 min-w-0 pt-6 sm:pt-8 lg:self-center lg:py-12">
           <p data-anim="left" className="flex items-center gap-2.5 text-[15px] font-semibold text-navy-800 sm:text-[17px]">
             <TunisiaFlag className="h-4.5 w-auto sm:h-5" />
             <span>
@@ -32,7 +41,7 @@ export function Hero() {
 
           <h1
             data-anim="words"
-            className="mt-3 text-[clamp(1.875rem,3.4vw,2.75rem)] leading-[1.1] font-bold tracking-tight text-navy-950"
+            className="mt-3 text-[clamp(1.875rem,3.2vw,3.25rem)] leading-[1.1] font-bold tracking-tight text-navy-950"
           >
             {locale === 'en' ? (
               <>
@@ -48,10 +57,12 @@ export function Hero() {
             )}
           </h1>
 
-          <p data-anim="up" data-delay="0.25" className="mt-4 max-w-md text-[15px] leading-relaxed text-navy-500">
-            {locale === 'en'
-              ? 'Device, wall cabinet, signage, installation, maintenance and training: everything is included. No purchase required.'
-              : 'Appareil, armoire murale, signalétique, installation, maintenance et formation : tout est inclus. Sans rien acheter.'}
+          <p data-anim="up" data-delay="0.25" className="mt-4 max-w-lg text-[15px] leading-relaxed text-navy-500 lg:text-[16px]">
+            {locale === 'en' ? (
+              <>Defibrillator, wall cabinet, signage, installation, maintenance and <strong className={TRAINING_CLASS}>training</strong>: everything is included. No purchase required.</>
+            ) : (
+              <>Défibrillateur, armoire murale, signalétique, installation, maintenance et <strong className={TRAINING_CLASS}>formation</strong> : tout est inclus. Sans rien acheter.</>
+            )}
           </p>
 
           <div data-anim="up" data-delay="0.35" className="mt-6 flex flex-wrap gap-2.5">
@@ -74,7 +85,7 @@ export function Hero() {
         </div>
 
         <div className="min-w-0">
-          <StackedHeroCards />
+          <HeroCarousel />
         </div>
       </div>
     </section>

@@ -6,7 +6,7 @@ import { startPageTransition } from '@/lib/page-transition'
 import { RouteContext, type RouteValue } from './route-context'
 
 /** Hauteur de la barre collante : les ancres s'arrêtent dessous. */
-const NAV_OFFSET = 72
+const NAV_OFFSET = 88
 
 type Navigation = {
   path: string

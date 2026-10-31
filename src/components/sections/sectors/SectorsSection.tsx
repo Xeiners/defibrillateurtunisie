@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type ComponentType } from 'react'
 import {
   ArrowRight,
-  Bank,
   Barbell,
   Bed,
+  Briefcase,
   Check,
   Factory,
   FirstAid,
@@ -25,10 +25,10 @@ const SECTOR_ICONS: Record<string, ComponentType<IconProps>> = {
   sport: Barbell,
   restaurants: ForkKnife,
   hotels: Bed,
-  entreprises: Factory,
+  entreprises: Briefcase,
   commerces: Storefront,
   sante: FirstAid,
-  public: Bank,
+  usine: Factory,
 }
 
 /** Extensions essayées, dans l'ordre, pour l'illustration d'un secteur. */

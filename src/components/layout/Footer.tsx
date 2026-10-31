@@ -10,7 +10,7 @@ import { Logo } from '@/components/ui/Logo'
 import { SplitWords } from '@/components/ui/SplitWords'
 import { legalLinks, primaryNav } from '@/data/navigation'
 import { CURRENCY, HEADLINE_PRICE } from '@/data/pricing'
-import { actions, contact, site, socialLinks, studio } from '@/data/site'
+import { actions, contact, phoneHref, site, socialLinks, studio } from '@/data/site'
 import { useLocale } from '@/i18n/LocaleProvider'
 
 const SOCIAL_ICONS = {
@@ -64,7 +64,7 @@ export function Footer() {
               {t(actions.quote.label)}
             </Button>
             {contact.phone !== '' && (
-              <Button href={`tel:${contact.phone.replace(/\s/g, '')}`} variant="ghost">
+              <Button href={phoneHref} variant="ghost">
                 {contact.phone}
               </Button>
             )}
@@ -130,7 +130,7 @@ export function Footer() {
               {contact.phone !== '' && (
                 <li>
                   <a
-                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                    href={phoneHref}
                     className="flex items-center gap-2.5 transition-colors hover:text-white"
                   >
                     <Phone size={16} aria-hidden="true" className="shrink-0" />
@@ -142,7 +142,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col-reverse gap-3 border-t border-white/10 py-6 text-[13px] text-navy-400 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col-reverse gap-3 border-t border-white/10 pt-6 pb-[calc(1.5rem_+_var(--notice-height,0px))] text-[13px] text-navy-400 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.legalName}. {locale === 'en' ? 'All rights reserved.' : 'Tous droits réservés.'}
           </p>

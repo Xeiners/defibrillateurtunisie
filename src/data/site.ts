@@ -40,11 +40,17 @@ export type Contact = {
 }
 
 export const contact: Contact = {
-  // TODO client : confirmer le domaine réel et renseigner le téléphone.
+  // TODO client : confirmer le domaine réel.
   email: 'contact@defib.tn',
-  phone: '',
+  phone: '71 714 063',
   city: 'Tunis, Tunisie',
 }
+
+/**
+ * Lien d'appel : le numéro s'affiche au format local, mais le lien porte
+ * l'indicatif +216 pour fonctionner aussi depuis un téléphone étranger.
+ */
+export const phoneHref = `tel:+216${contact.phone.replace(/\s/g, '')}`
 
 export type SocialLink = { id: string; label: string; href: string }
 

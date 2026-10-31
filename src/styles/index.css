@@ -83,7 +83,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     /* La barre de navigation est collante : les ancres s'arrêtent sous elle. */
-    scroll-padding-top: 72px;
+    scroll-padding-top: 88px;
     /*
      * PAS de `scroll-behavior: smooth` ici. Il entre en conflit avec les
      * animations liées au défilement (ScrollTrigger `scrub`), qui se mettent à

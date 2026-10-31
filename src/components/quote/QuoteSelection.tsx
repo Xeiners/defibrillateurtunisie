@@ -48,7 +48,7 @@ export function QuoteSelection({ className }: { className?: string }) {
   const available = packs.filter((pack) => !lines.some((line) => line.packId === pack.id))
 
   return (
-    <aside className={cn('flex flex-col gap-4 lg:sticky lg:top-20', className)}>
+    <aside className={cn('flex flex-col gap-4 lg:sticky lg:top-24', className)}>
       <div className="overflow-hidden rounded-2xl border border-navy-100 bg-white shadow-(--shadow-card)">
         <header className="on-dark flex items-center justify-between gap-3 bg-navy-950 px-5 py-4 text-white">
           <div>

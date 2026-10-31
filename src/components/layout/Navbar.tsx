@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { List, Phone, Translate, X } from '@phosphor-icons/react'
 import { primaryNav } from '@/data/navigation'
-import { actions, contact } from '@/data/site'
+import { actions, contact, phoneHref } from '@/data/site'
 import { Logo } from '@/components/ui/Logo'
 import { Button } from '@/components/ui/Button'
 import { gsap } from '@/animations/gsap'
@@ -12,7 +12,7 @@ import { useLocale } from '@/i18n/LocaleProvider'
 const MENU_ID = 'menu-principal'
 
 /**
- * Barre de navigation collante, 64px.
+ * Barre de navigation collante, 72px en mobile, 80px dès `sm`.
  *
  * Un filet rouge court sous elle et suit la progression de lecture. L'ombre
  * n'apparaît qu'une fois la page défilée. En mobile, le menu se déplie sous la
@@ -81,8 +81,8 @@ export function Navbar() {
         isScrolled && 'shadow-[0_8px_24px_-18px_rgb(7_18_36/0.35)]',
       )}
     >
-      <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6">
-        <Logo />
+      <div className="relative mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 sm:h-20 sm:px-6">
+        <Logo size="lg" />
 
         <nav aria-label={locale === 'en' ? 'Main navigation' : 'Navigation principale'} className="hidden lg:block">
           <ul className="flex list-none items-center gap-1">
@@ -116,14 +116,17 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {/* Le téléphone commercial n'apparaît que s'il est renseigné. */}
+          {/* Le téléphone commercial n'apparaît que s'il est renseigné. Numéro
+              en toutes lettres dès la tablette ; en mobile, et entre `lg` et
+              `xl` où les liens prennent la place, il se réduit au combiné. */}
           {contact.phone !== '' && (
             <a
-              href={`tel:${contact.phone.replace(/\s/g, '')}`}
-              className="hidden items-center gap-2 rounded-full px-3 py-2 text-[14px] font-semibold text-navy-700 transition-colors hover:text-urgent-600 xl:inline-flex"
+              href={phoneHref}
+              aria-label={`${locale === 'en' ? 'Call us:' : 'Nous appeler :'} ${contact.phone}`}
+              className="inline-flex h-9 shrink-0 items-center gap-2 rounded-full bg-urgent-50 px-2.5 text-[14px] font-bold whitespace-nowrap text-urgent-700 tabular-nums transition-colors hover:bg-urgent-600 hover:text-white md:px-3.5 lg:px-2.5 xl:px-3.5"
             >
-              <Phone size={17} weight="fill" className="text-urgent-600" aria-hidden="true" />
-              {contact.phone}
+              <Phone size={16} weight="fill" aria-hidden="true" />
+              <span className="hidden md:inline lg:hidden xl:inline">{contact.phone}</span>
             </a>
           )}
 

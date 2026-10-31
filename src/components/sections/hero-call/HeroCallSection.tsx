@@ -26,17 +26,17 @@ export function HeroCallSection() {
 
   return (
     <section className="overflow-x-clip bg-navy-50 py-10 sm:py-12">
-      <div className="mx-auto flex max-w-6xl flex-col items-stretch gap-4 px-4 sm:px-6 lg:flex-row lg:gap-6">
+      <div className="mx-auto flex max-w-6xl flex-col items-stretch gap-4 px-4 sm:px-6 md:flex-row lg:gap-6">
         <div
           data-anim="pop"
-          className="grid shrink-0 place-items-center rounded-2xl bg-white p-4 lg:w-55"
+          className="grid shrink-0 place-items-center rounded-2xl bg-white p-4 md:w-48 lg:w-55"
         >
           {image ? (
             <img
               src={image}
               alt={locale === 'en' ? 'Hero silhouette with a red cape and a lightning-bolt heart on the chest' : 'Silhouette d’un héros, cape rouge et cœur avec un éclair sur la poitrine'}
               onError={() => setAttempt((current) => current + 1)}
-              className="h-32 w-auto object-contain sm:h-40 lg:h-44"
+              className="h-32 w-auto object-contain sm:h-36 lg:h-44"
             />
           ) : (
             <Lightning size={72} weight="fill" className="text-urgent-500" aria-hidden="true" />

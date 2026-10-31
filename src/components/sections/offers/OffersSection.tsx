@@ -85,7 +85,9 @@ export function OffersSection() {
           intro={locale === 'en' ? 'Turnkey rental: you choose the device, we take care of everything else.' : 'Location clé en main : vous choisissez l’appareil, nous nous occupons du reste.'}
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
+        {/* Une colonne en mobile, deux en tablette — le troisième pack se
+            centre seul sur sa ligne au lieu de s'étirer —, trois en grand. */}
+        <div className="mt-8 flex flex-wrap justify-center gap-5 sm:mt-10">
           {packs.map((pack, index) => (
             <PackCard key={pack.id} pack={pack} delay={index * 0.08} />
           ))}
@@ -112,7 +114,7 @@ function PackCard({ pack, delay }: { pack: Pack; delay: number }) {
       data-anim="pop"
       data-delay={String(delay)}
       className={cn(
-        'group/pack relative flex flex-col overflow-hidden rounded-xl border bg-white',
+        'group/pack relative flex w-full flex-col overflow-hidden rounded-xl border bg-white sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%_-_0.84rem)]',
         'transition-[translate,scale,box-shadow,border-color] duration-250 ease-smooth will-change-transform hover:-translate-y-1.5',
         isPopular
           ? 'border-2 border-urgent-600 shadow-[0_24px_50px_-30px_rgb(216_30_39/0.55)] hover:shadow-[0_34px_60px_-28px_rgb(216_30_39/0.6)]'
@@ -348,7 +350,7 @@ function PurchaseBanner() {
         href={purchaseSite.href}
         target="_blank"
         rel="noreferrer noopener"
-        className="group inline-flex h-11 shrink-0 items-center gap-2 rounded-md px-5 text-[14px] font-semibold text-white transition-colors"
+        className="group inline-flex h-11 w-full shrink-0 items-center justify-center gap-2 rounded-md px-5 text-[14px] font-semibold text-white transition-colors sm:w-auto"
         style={{ backgroundColor: purchaseSite.brandDeep }}
         onMouseEnter={(event) => {
           event.currentTarget.style.backgroundColor = purchaseSite.brandDeeper
